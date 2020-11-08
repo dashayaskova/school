@@ -1,0 +1,27 @@
+{
+  "name": "learn-starter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon server.js node",
+    "build": "next build",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "clsx": "^1.1.1",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "firebase": "^8.0.1",
+    "http-proxy-middleware": "^1.0.6",
+    "material-table": "^1.69.1",
+    "next": "^10.0.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
