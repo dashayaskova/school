@@ -14,6 +14,17 @@ School website React/Nextjs + ASP.NET CORE
 <li>GraphQL</li>
 </ul>
 <p>&nbsp;</p>
+<h4>Microservice arhitecture</h4>
+<p>User tries to login</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-47.jpg" alt="Login architecture"></p>
+<br />
+<p>Admin opens page with users</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-53.jpg" alt="Users page architecture"></p>
+<br />
+<p>Admin adds user</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-57.jpg" alt="Add user architecture"></p>
+<br />
+<p>&nbsp;</p>
 <h4>MVP:</h4>
 <p><br />Two types of users:</p>
 <ul>
