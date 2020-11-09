@@ -64,19 +64,21 @@ School website React/Nextjs + ASP.NET CORE
 <p>&nbsp;</p>
 <h3>Development</h3>
 <p>Make sure you have installed NodeJS and .NET Core.<br />Install node_modules in <code>nextjs-school</code> and <code>auth</code> directories</p>
+<br />
 <code>npm install</code>
 <br />
-<p>Run auth server in the <code>auth</code> directory</p>
 <br />
+<p>Run auth server in the <code>auth</code> directory</p>
 <code>npm run start</code>
+<br />
 <br />
 <p>Run Next.js server in the <code>nextjs-school</code> directory</p>
-<br />
 <code>npm run start</code>
 <br />
-<p>Run graphql server in the <code>School/School</code> directory</p>
 <br />
+<p>Run graphql server in the <code>School/School</code> directory</p>
 <code>dotnet run School.csproj</code>
+<br />
 <br />
 <p>Open <a href="http://localhost:3000">localhost:3000</a></p>
 <p>&nbsp;</p>
