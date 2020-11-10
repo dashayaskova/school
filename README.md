@@ -2,7 +2,7 @@
 School website React/Nextjs + ASP.NET CORE
 
 <p>Simple school app with microservice architecture, material design and Firebase authentification.&nbsp;</p>
-<h4><br />Stack:</h4>
+<h3><br />Stack:</h3>
 <ul>
 <li>React</li>
 <li>Next.js</li>
@@ -14,7 +14,18 @@ School website React/Nextjs + ASP.NET CORE
 <li>GraphQL</li>
 </ul>
 <p>&nbsp;</p>
-<h4>MVP:</h4>
+<h3>Microservice arhitecture</h3>
+<p>User tries to login</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-47.jpg" alt="Login architecture"></p>
+<br />
+<p>Admin opens page with users</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-53.jpg" alt="Users page architecture"></p>
+<br />
+<p>Admin adds user</p>
+<p><img width="700px" src="/readme/photo_2020-11-09_10-16-57.jpg" alt="Add user architecture"></p>
+<br />
+<p>&nbsp;</p>
+<h3>MVP:</h3>
 <p><br />Two types of users:</p>
 <ul>
 <li>teacher</li>
@@ -50,5 +61,25 @@ School website React/Nextjs + ASP.NET CORE
 <br />
 <h4>Remove user</h4>
 <img src="/readme/photo_2020-11-08_23-48-50.jpg" alt="Remove user">
+<p>&nbsp;</p>
+<h3>Development</h3>
+<p>Make sure you have installed NodeJS and .NET Core.<br />Install node_modules in <code>nextjs-school</code> and <code>auth</code> directories</p>
+<br />
+<code>npm install</code>
+<br />
+<br />
+<p>Run auth server in the <code>auth</code> directory</p>
+<code>npm run start</code>
+<br />
+<br />
+<p>Run Next.js server in the <code>nextjs-school</code> directory</p>
+<code>npm run start</code>
+<br />
+<br />
+<p>Run graphql server in the <code>School/School</code> directory</p>
+<code>dotnet run School.csproj</code>
+<br />
+<br />
+<p>Open <a href="http://localhost:3000">localhost:3000</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
