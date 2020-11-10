@@ -42,25 +42,28 @@ School website React/Nextjs + ASP.NET CORE
 </ul>
 <br />
 <h4>Login page</h4>
-<p><img src="/readme/photo_2020-11-08_23-31-26.jpg" alt="Login page"></p>
+<p><img src="/readme/photo_2020-11-10_14-37-56.jpg" alt="Login page"></p>
 <p>There is no sign up page, because admin adds users.&nbsp;</p>
 <br />
+<h4>Error message if data is incorrect</h4>
+<p><img width="700px" src="/readme/photo_2020-11-10_14-38-01.jpg" alt="Login page"></p>
+<br />
 <h4>Page with all users</h4>
-<img src="/readme/photo_2020-11-08_23-48-45.jpg" alt="Users page">
+<img src="/readme/photo_2020-11-10_14-38-12.jpg" alt="Users page">
 <p>In the table you can search by specific words and sort columns.&nbsp;</p>
 <br />
 <h4>Add user page</h4>
-<img src="/readme/photo_2020-11-08_23-48-31.jpg" alt="Add user page">
+<img src="/readme/photo_2020-11-10_14-38-16.jpg" alt="Add user page">
 <br />
 <h4>Add access to specific classes for teacher</h4>
-<img src="/readme/photo_2020-11-08_23-48-26.jpg" alt="Add user classes page">
+<img src="/readme/photo_2020-11-10_14-38-24.jpg" alt="Add user classes page">
 <br />
 <h4>Edit user page</h4>
-<img src="/readme/photo_2020-11-08_23-48-55.jpg" alt="Edit user page">
+<img src="/readme/photo_2020-11-10_14-38-20.jpg" alt="Edit user page">
 <p>In edit mode no opportunity to change email.</p>
 <br />
 <h4>Remove user</h4>
-<img src="/readme/photo_2020-11-08_23-48-50.jpg" alt="Remove user">
+<img src="/readme/photo_2020-11-10_14-38-27.jpg" alt="Remove user">
 <p>&nbsp;</p>
 <h3>Development</h3>
 <p>Make sure you have installed NodeJS and .NET Core.<br />Install node_modules in <code>nextjs-school</code> and <code>auth</code> directories</p>
