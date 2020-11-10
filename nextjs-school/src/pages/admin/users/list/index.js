@@ -24,7 +24,7 @@ const UserList = (props) => {
   return (
     <Navbar title={"Користувачі"}>
       <Button className={classes.addUser} color={"secondary"} variant={"contained"}
-        onClick={() => Router.push("/admin/users/add")}>Добавить юзера</Button>
+        onClick={() => Router.push("/admin/users/add")}>Додати користувача</Button>
 
       <Table
         title=""

@@ -10,9 +10,8 @@ const useStyles = makeStyles((theme) => ({}));
 const AddUser = (props) => {
     const classes = useStyles();
 
-    const onSubmit = async (user) => {
-        await addUser(user);
-        window.location.pathname = '/admin/users';
+    const onSubmit = async (user, onSuccess, onError) => {
+        await addUser(user, onSuccess, onError);
     }
 
     return (

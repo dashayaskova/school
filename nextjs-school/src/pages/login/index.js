@@ -3,9 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     TextField,
     Button,
+    Collapse,
+    IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { getClasses, signIn } from '../../actions';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -30,6 +34,7 @@ const Login = (props) => {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [open, setOpen] = React.useState(false);
 
     return (
         <div className={classes.container}>
@@ -63,11 +68,30 @@ const Login = (props) => {
                         variant="contained"
                         color="secondary"
                         size="large"
-                        onClick={e => signIn(email, password, () => window.location.reload())}
+                        onClick={e => signIn(email, password, () => window.location.reload(), 
+                            () => { setOpen(true); })}
                         className={classes.button}
                     >
-                        Login
+                        Увійти
               </Button>
+              <Collapse in={open}>
+                <Alert severity="error"
+                action={
+                    <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                        setOpen(false);
+                    }}
+                    >
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                }
+                >
+                Неправильно введений пароль!
+                </Alert>
+            </Collapse>
                 </form>
             </main>
         </div>

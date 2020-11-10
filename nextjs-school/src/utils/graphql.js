@@ -22,7 +22,6 @@ export const serverGraphql = async (req, query, vars) => {
 }
 
 export const clientGraphql = async (query, vars) => {
-    console.log(vars);
     const response = await fetch('/graphql', {
         method: 'POST',
         headers: {

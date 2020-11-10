@@ -7,12 +7,15 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  IconButton,
   FormControlLabel,
   Checkbox,
+  Collapse,
+  IconButton,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Alert } from '@material-ui/lab';
 
 import { getClasses } from '../../src/actions/index'
 import AddClassDialog from './AddClassDialog'
@@ -37,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   },
   checkbox: {
     marginLeft: '10px'
+  },
+  alert: {
+    width: '50%'
   }
 }));
 
@@ -45,6 +51,8 @@ const UserForm = (props) => {
   const [open, setOpen] = React.useState(false);
   const [classesObj, setClasses] = React.useState([]);
   const [user, setUser] = useState(props.user);
+  const [openError, setOpenError] = React.useState(false);
+
 
   const handleClickOpen = async () => {
     setOpen(true);
@@ -117,21 +125,47 @@ const UserForm = (props) => {
               <FormControlLabel className={classes.checkbox}
                 control={<Checkbox
                   checked={user.isAdmin}
-                  onChange={(e) => setUser({ ...user, isAdmin: e.target.checked })}
+                  onChange={(e) => 
+                    setUser({ ...user, isAdmin: e.target.checked })
+                  }
                 ></Checkbox>}
                 label={"Адміністратор"}
               />
             </div>
             <Button
-              onClick={() => props.onFormSubmit(user)}
+              onClick={() => props.onFormSubmit(
+                user, 
+                () => { window.location.pathname = '/admin/users' }, 
+                () => { setOpenError(true) })}
               variant="contained"
               color="secondary"
               className={classes.submit}
             >
               Зберегти
-                </Button>
+            </Button>
+            <Collapse in={openError}>
+                <Alert severity="error"
+                className={classes.alert}
+                action={
+                    <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                        setOpenError(false);
+                    }}
+                    >
+                    <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                }
+                >
+                Сталась помилка
+                </Alert>
+            </Collapse>
           </div>
-          <div className="half">
+          {
+            !user.isAdmin &&
+            <div className="half">
             <Button
               variant="contained"
               color="secondary"
@@ -140,7 +174,7 @@ const UserForm = (props) => {
               startIcon={<AddCircleIcon />}
               onClick={handleClickOpen}
             >
-              Добавить классы
+              Додати класи 
                 </Button>
             <AddClassDialog
               selectedClasses={user.classAccess}
@@ -155,6 +189,7 @@ const UserForm = (props) => {
               </List>
             </div>
           </div>
+        }
         </form>
   )
 }

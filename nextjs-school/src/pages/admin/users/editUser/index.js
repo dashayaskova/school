@@ -9,9 +9,8 @@ const useStyles = makeStyles((theme) => ({}));
 
 const EditUser = (props) => {
     const classes = useStyles();
-    const onSubmit = async (user) => {
-        await editUser(user);
-        window.location.pathname = '/admin/users';
+    const onSubmit = async (user, onSuccess, onError) => {
+        await editUser(user, onSuccess, onError);
     }
 
     return (

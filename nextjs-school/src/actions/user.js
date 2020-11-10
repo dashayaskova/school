@@ -102,7 +102,7 @@ export async function addUser(user, onSuccess, onError) {
     if (onSuccess) onSuccess();
 }
 
-export async function editUser(user) {
+export async function editUser(user, onSuccess, onError) {
     const response = await clientGraphql(
         `mutation (
             $id: String!
@@ -131,5 +131,9 @@ export async function editUser(user) {
           }`, 
         {...user, classAccess: user.classAccess.map(el => el.id) });
     
-    return response.editUser;
+    if (!response) {
+        if (onError) onError();
+        return;
+    }
+    if (onSuccess) onSuccess();
 }
