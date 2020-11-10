@@ -153,7 +153,7 @@ const MiniDrawer = (props) => {
               <ListItemIcon><ClassIcon /></ListItemIcon>
               <ListItemText primary={'Класи'} />
             </ListItem>
-            {isAdmin ? <ListItem button onClick={() => { router.push('/admin/teachers') }}>
+            {isAdmin ? <ListItem button onClick={() => { router.push('/admin/users') }}>
               <ListItemIcon><PersonIcon /></ListItemIcon>
               <ListItemText primary={'Користувачі'} />
             </ListItem> : <></>}
