@@ -46,7 +46,7 @@ School website React/Nextjs + ASP.NET CORE
 <p>There is no sign up page, because admin adds users.&nbsp;</p>
 <br />
 <h4>Error message if data is incorrect</h4>
-<p><img width="700px" src="/readme/photo_2020-11-10_14-38-01.jpg" alt="Login page"></p>
+<p><img src="/readme/photo_2020-11-10_14-38-01.jpg" alt="Login page"></p>
 <br />
 <h4>Page with all users</h4>
 <img src="/readme/photo_2020-11-10_14-38-12.jpg" alt="Users page">
