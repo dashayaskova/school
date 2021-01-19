@@ -6,9 +6,9 @@ import {
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 
-import Navbar from '../../../../components/Navbar';
-import Table from '../../../../components/Table';
-import { deleteUser } from '../../../../actions';
+import Navbar from '@/components/Navbar';
+import Table from '@/components/Table';
+import { deleteUser } from '@/actions';
 
 const useStyles = makeStyles((theme) => ({
   addUser: {

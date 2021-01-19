@@ -10,7 +10,7 @@ namespace School.GraphTypes
         public string Name { get; set; }
         public bool IsAdmin { get; set; }
         public string Email { get; set; }
-        public List<string> ClassAccess { get; set; }
+        public List<ClassSubjectsInput> ClassAccess { get; set; }
         public string Uid { get; set; }
     }
     
@@ -21,9 +21,25 @@ namespace School.GraphTypes
             Name = "UserInput";
             Field(x => x.Name);
             Field(x => x.IsAdmin);
-            Field(x => x.ClassAccess);
+            Field(x => x.ClassAccess, type: typeof(ListGraphType<ClassSubjectsInputType>));
             Field(x => x.Email);
             Field(x => x.Uid);
+        }
+    }
+
+    public class ClassSubjectsInput
+    {
+        public string ClassId { get; set; }
+        public List<string> SubjectAccess { get; set; }
+    }
+
+    public class ClassSubjectsInputType : InputObjectGraphType<ClassSubjectsInput>
+    {
+        public ClassSubjectsInputType()
+        {
+            Name = "ClassSubjectsInput";
+            Field(x => x.ClassId);
+            Field(x => x.SubjectAccess);
         }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   TextField,
@@ -17,7 +17,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Alert } from '@material-ui/lab';
 
-import { getClasses } from '../../src/actions/index'
 import AddClassDialog from './AddClassDialog'
 
 const useStyles = makeStyles((theme) => ({
@@ -47,150 +46,158 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserForm = (props) => {
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [classesObj, setClasses] = React.useState([]);
   const [user, setUser] = useState(props.user);
   const [openError, setOpenError] = React.useState(false);
 
-
   const handleClickOpen = async () => {
     setOpen(true);
-    setClasses(await getClasses());
   };
 
   const handleDeleteItem = (id) => {
-    setUser({ ...user, classAccess: user.classAccess.filter(el => el.id != id) });
+    setUser({ ...user, classAccess: user.classAccess.filter(el => el.class.id != id) });
   }
 
   const listItems = user.classAccess.map((classObj) =>
-    <ListItem key={classObj.id}>
+    <ListItem key={classObj.class.id}>
       <ListItemText
-        primary={classObj.name}
-        secondary={'Secondary text'}
+        primary={classObj.class.name}
+        secondary={classObj.class.year}
       />
       <ListItemSecondaryAction>
-        <IconButton onClick={() => handleDeleteItem(classObj.id)} edge="end" aria-label="delete">
+        <IconButton onClick={() => handleDeleteItem(classObj.class.id)} edge="end" aria-label="delete">
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>);
 
   return (
-        <form className={classes.form} noValidate>
-          <div className={classes.half}>
-            <div className={classes.fieldContainer}>
-              <TextField
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                value={user.name || ''}
-                onChange={e => setUser({ ...user, name: e.target.value })}
-                id="firstName"
-                label="ПІБ"
-                autoFocus
-              />
-            </div>
-            <div className={classes.fieldContainer}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                required
-                value={user.email || ''}
-                onChange={e => setUser({ ...user, email: e.target.value })}
-                id="email"
-                disabled={user.id}
-                label="Email Address"
-                name="email"
-              />
-            </div>
+    <form className={classes.form} noValidate>
+      <div className={classes.half}>
+        <div className={classes.fieldContainer}>
+          <TextField
+            name="firstName"
+            variant="outlined"
+            required
+            fullWidth
+            value={user.name || ''}
+            onChange={e => setUser({ ...user, name: e.target.value })}
+            id="firstName"
+            label="ПІБ"
+            autoFocus
+          />
+        </div>
+        <div className={classes.fieldContainer}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            required
+            value={user.email || ''}
+            onChange={e => setUser({ ...user, email: e.target.value })}
+            id="email"
+            disabled={user.id}
+            label="Email Address"
+            name="email"
+          />
+        </div>
 
-            <div className={classes.fieldContainer}>
-              {
-                user.id ?
-                  <></> :
-                  <TextField
-                    variant="outlined"
-                    required
-                    value={user.password || ''}
-                    onChange={e => setUser({ ...user, password: e.target.value })}
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                  />
-              }
-
-              <FormControlLabel className={classes.checkbox}
-                control={<Checkbox
-                  checked={user.isAdmin}
-                  onChange={(e) => 
-                    setUser({ ...user, isAdmin: e.target.checked })
-                  }
-                ></Checkbox>}
-                label={"Адміністратор"}
-              />
-            </div>
-            <Button
-              onClick={() => props.onFormSubmit(
-                user, 
-                () => { window.location.pathname = '/admin/users' }, 
-                () => { setOpenError(true) })}
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
-            >
-              Зберегти
-            </Button>
-            <Collapse in={openError}>
-                <Alert severity="error"
-                className={classes.alert}
-                action={
-                    <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                        setOpenError(false);
-                    }}
-                    >
-                    <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }
-                >
-                Сталась помилка
-                </Alert>
-            </Collapse>
-          </div>
+        <div className={classes.fieldContainer}>
           {
-            !user.isAdmin &&
-            <div className="half">
-            <Button
-              variant="contained"
-              color="secondary"
-              size="large"
-              className={classes.addClass}
-              startIcon={<AddCircleIcon />}
-              onClick={handleClickOpen}
-            >
-              Додати класи 
+            user.id ?
+              <></> :
+              <TextField
+                variant="outlined"
+                required
+                value={user.password || ''}
+                onChange={e => setUser({ ...user, password: e.target.value })}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+              />
+          }
+
+          <FormControlLabel className={classes.checkbox}
+            control={<Checkbox
+              checked={user.isAdmin}
+              onChange={(e) =>
+                setUser({ ...user, isAdmin: e.target.checked })
+              }
+            ></Checkbox>}
+            label={"Адміністратор"}
+          />
+        </div>
+        <Button
+          onClick={() => props.onFormSubmit(
+            user,
+            () => { window.location.pathname = '/admin/users' },
+            () => { setOpenError(true) })}
+          variant="contained"
+          color="secondary"
+          className={classes.submit}
+        >
+          Зберегти
+            </Button>
+        <Collapse in={openError}>
+          <Alert severity="error"
+            className={classes.alert}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpenError(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            Сталась помилка
+                </Alert>
+        </Collapse>
+      </div>
+      {
+        !user.isAdmin &&
+        <div className="half">
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            className={classes.addClass}
+            startIcon={<AddCircleIcon />}
+            onClick={handleClickOpen}
+          >
+            Додати класи
                 </Button>
-            <AddClassDialog
-              selectedClasses={user.classAccess}
-              open={open}
-              onClose={() => setOpen(false)}
-              classesObj={classesObj}
-              setSelectedClasses={(classAccess) => setUser({...user, classAccess})}
-            />
-            <div className={classes.fieldContainer}>
-              <List dense>
-                {listItems}
-              </List>
-            </div>
+          <AddClassDialog
+            open={open}
+            onClose={() => setOpen(false)}
+            allClasses={props.classes}
+            userClasses={user.classAccess}
+            params={props.params}
+            setSelectedClasses={(selClass, selSubjects) => {
+              let u = {
+                ...user,
+                classAccess: [...user.classAccess, {
+                  class: selClass,
+                  subjectAccess: selSubjects
+                }]
+              };
+              setUser(u);
+            }}
+          />
+          <div className={classes.fieldContainer}>
+            <List dense>
+              {listItems}
+            </List>
           </div>
-        }
-        </form>
+        </div>
+      }
+    </form>
   )
 }
 

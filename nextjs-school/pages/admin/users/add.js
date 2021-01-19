@@ -1,1 +1,3 @@
-export {default} from '../../../src/pages/admin/users/addUser';
+export {default} from '@/pages/admin/users/addUser';
+
+export { getServerSideProps } from '@/pages/admin/users/addUser/dataFetching';

@@ -1,0 +1,8 @@
+#nprogress {
+    position: relative;
+    z-index: 9999999;
+  }
+  
+#nprogress .bar {
+    background:  #e75480 !important;
+}

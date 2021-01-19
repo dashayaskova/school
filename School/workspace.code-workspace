@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\auth"
+		},
+		{
+			"path": "..\\nextjs-school"
+		}
+	],
+	"settings": {}
+}

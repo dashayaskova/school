@@ -2,18 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Button,
+    FormControl,
+    Select,
+    InputLabel,
+    MenuItem
 } from '@material-ui/core';
 import _ from 'lodash';
 
-import Table from '../../../components/Table';
-import Navbar from '../../../components/Navbar'
-import GradeSpaceDialog from '../../../components/GradeSpaceDialog';
+import Table from '@/components/Table';
+import Navbar from '@/components/Navbar'
+import GradeSpaceDialog from '@/components/GradeSpaceDialog';
 import { createEditGrades } from '@/actions/subject';
 
 const useStyles = makeStyles((theme) => ({
-    addStudent: {
-        marginLeft: 'auto',
-        marginBottom: theme.spacing(1)
+    buttons: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginBottom: theme.spacing(1),
     }
 }));
 
@@ -23,7 +29,21 @@ const SubjectClass = (props) => {
     const [gradeSpaces, setGradeSpaces] = useState(props.subject.gradeSpaces);
     const [grades, setGrades] = useState(props.grades);
     const [open, setOpen] = useState(false);
+    const [semester, setSemester] = useState('');
     const stDict = {};
+
+    const filteredGradeSpaces = gradeSpaces.filter(el => {
+        let month = new Date(el.date).getMonth() + 1;
+
+        switch (semester) {
+            case "sem1":
+                return month >= 9 && month <= 12;
+            case "sem2":
+                return month >= 1 && month <= 5;
+            default:
+                return true;
+        }
+    });
 
     const rows = students.map((st, i) => {
         stDict[st.id] = i;
@@ -38,21 +58,21 @@ const SubjectClass = (props) => {
     });
 
     //TODO checks whether it works okay
-    const gradesColumns = gradeSpaces
-        .sort(function(a,b){
+    const gradesColumns = filteredGradeSpaces
+        .sort(function (a, b) {
             return new Date(a.date) - new Date(b.date);
         })
         .map(grSpace => ({
-        title: grSpace.name,
-        field: `${grSpace.id}.mark`,
-    }));
+            title: grSpace.name,
+            field: `${grSpace.id}.mark`,
+        }));
 
     for (const grade of grades) {
         const row = rows[stDict[grade.student.id]];
         row[grade.gradeSpace.id] = { id: grade.id, mark: grade.mark, type: "grade" };
     }
 
-    const  handleEdit = (changes) =>
+    const handleEdit = (changes) =>
         new Promise((resolve, reject) => {
             console.log(changes)
             let marksToAdd = [];
@@ -80,7 +100,7 @@ const SubjectClass = (props) => {
                         })
                     }
 
-                    if (newData[gradeSpaceId].id && !newData[gradeSpaceId].mark 
+                    if (newData[gradeSpaceId].id && !newData[gradeSpaceId].mark
                         && newData[gradeSpaceId].mark !== oldData[gradeSpaceId].mark) {
                         marksToRemove.push(newData[gradeSpaceId].id);
                     }
@@ -98,37 +118,37 @@ const SubjectClass = (props) => {
                 resolve();
             });
         });
-    
-    const handleSemChange = (event) => {
-        switch(event.target.value) {
-            case "sem1":
 
-        }
+    const handleSemChange = (event) => {
+        setSemester(event.target.value);
     };
 
     return (
         <Navbar title={props.subject.name}>
-            <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">Рік</InputLabel>
-                <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                onChange={handleSemChange}
-                label="Рік"
-                value=""
-                >
-                    <MenuItem value=""></MenuItem>
-                    <MenuItem value="sem1">Семестр 1</MenuItem>
-                    <MenuItem value="sem2">Семестр 2</MenuItem>
-                </Select>
-          </FormControl>
-            <Button className={classes.addStudent} color={"secondary"} variant={"contained"}
-                onClick={() => setOpen(true)}>Редагувати колонки</Button>
+            <div className={classes.buttons}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-outlined-label">Рік</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        onChange={handleSemChange}
+                        label="Семестр"
+                        value={semester}
+                    >
+                        <MenuItem value="">-</MenuItem>
+                        <MenuItem value="sem1">Семестр 1</MenuItem>
+                        <MenuItem value="sem2">Семестр 2</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button color={"secondary"} variant={"contained"}
+                    onClick={() => setOpen(true)}>Редагувати колонки</Button>
+            </div>
             <GradeSpaceDialog
                 open={open}
                 onClose={() => setOpen(false)}
                 gradeSpaces={gradeSpaces}
                 setGradeSpaces={setGradeSpaces}
+                filteredGradeSpaces={filteredGradeSpaces}
                 subject={props.subject}
             />
             <Table

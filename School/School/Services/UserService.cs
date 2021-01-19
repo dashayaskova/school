@@ -31,6 +31,9 @@ namespace School.Services
         public List<User> Get() =>
             _users.Find(user => true).ToList();
 
+        public List<User> Get(bool isAdmin) =>
+            _users.Find(Builders<User>.Filter.Eq("IsAdmin", isAdmin)).ToList();
+
         public void AddUser(User user) =>
             _users.InsertOne(user);
 

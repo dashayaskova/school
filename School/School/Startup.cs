@@ -39,10 +39,25 @@ namespace School
 
 			services.AddSingleton<UserService>();
 			services.AddSingleton<ClassService>();
+			services.AddSingleton<StudentService>();
+			services.AddSingleton<ParamsService>();
+			services.AddSingleton<SubjectService>();
+			services.AddSingleton<GradeSpaceService>();
+			services.AddSingleton<GradeService>();
 			services.AddSingleton<UserType>();
 			services.AddSingleton<ClassType>();
+			services.AddSingleton<ClassSubjectsType>();
+			services.AddSingleton<StudentType>();
+			services.AddSingleton<ParamsType>();
+			services.AddSingleton<SubjectType>();
+			services.AddSingleton<GradeSpaceType>();
+			services.AddSingleton<GradeType>();
+			services.AddSingleton<ClassSubjectsInputType>();
 			services.AddSingleton<UserInputType>();
 			services.AddSingleton<ClassInputType>();
+			services.AddSingleton<StudentInputType>();
+			services.AddSingleton<GradeSpaceInputType>();
+			services.AddSingleton<GradeInputType>();
 			services.AddSingleton<Query>();
 			services.AddSingleton<Mutation>();
 			services.AddSingleton<SchoolSchema>();

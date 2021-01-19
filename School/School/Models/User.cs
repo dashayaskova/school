@@ -20,7 +20,7 @@ namespace School.Models
 
         public string Uid { get; set; }
 
-        public List<ObjectId> ClassAccess { get; set; }
+        public List<ClassSubjects> ClassAccess { get; set; }
 
         public User() {}
         
@@ -28,8 +28,17 @@ namespace School.Models
         {
             Name = ui.Name;
             IsAdmin = ui.IsAdmin;
-            ClassAccess = ui.ClassAccess.Select(i => ObjectId.Parse(i)).ToList();
+            ClassAccess = ui.ClassAccess.Select(i => new ClassSubjects() {
+                ClassId = ObjectId.Parse(i.ClassId),
+                SubjectAccess = i.SubjectAccess.Select(j => ObjectId.Parse(j)).ToList()
+            }).ToList();
         }
     }
-    
+
+    public class ClassSubjects {
+        [BsonIgnore]
+        public Class Class { get; set; }
+        public ObjectId ClassId { get; set; }
+        public List<ObjectId> SubjectAccess { get; set; }
+    }
 }

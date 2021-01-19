@@ -2,28 +2,38 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using School.Models;
+using School.GraphTypes;
+using MongoDB.Bson;
 
 namespace School.Services
 {
-    public class ClassService
+    public class ClassService : BaseService<Class>
     {
-        private readonly IMongoCollection<Class> _classes;
-
-        public ClassService(ISchoolDatabaseSettings settings)
+        public ClassService(ISchoolDatabaseSettings settings) : base(settings)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-
-            _classes = database.GetCollection<Class>("Classes");
+            _collection = _database.GetCollection<Class>("Classes");
         }
 
-        public List<Class> Get(FilterDefinition<Class> filter) =>
-            _classes.Find(filter).ToList();
-        
-        public List<Class> Get() =>
-            _classes.Find(classObj => true).ToList();
-        
-        public void AddClass(Class classObj) =>
-            _classes.InsertOne(classObj);
+        public Class EditClass(string id, ClassInput ct) {
+            var classDb = _collection.Find(idFilter(id)).First();
+            classDb.Name = ct.Name;
+            classDb.Year = ct.Year;
+            // classDb.CurrentTeacher = ObjectId.Parse(ct.CurrentTeacher);
+            _collection.ReplaceOne(idFilter(id), classDb);
+            return classDb;
+        }
+
+        public Class AddStudent(string id, List<string> students) {
+            var classDb = _collection.Find(idFilter(id)).First();
+            classDb.Students.AddRange(students.Select(e => ObjectId.Parse(e)));
+            _collection.ReplaceOne(idFilter(id), classDb);
+            return classDb;
+        }
+
+        public bool RemoveStudent(string id, string studentId) {
+            var classDb = _collection.Find(idFilter(id)).First();
+            classDb.Students.Remove(ObjectId.Parse(studentId));
+            return _collection.ReplaceOne(idFilter(id), classDb).ModifiedCount == 1;
+        }
     }
 }

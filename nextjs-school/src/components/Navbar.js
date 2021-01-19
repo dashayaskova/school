@@ -14,6 +14,7 @@ import {
   Divider,
   IconButton,
 } from '@material-ui/core';
+import SchoolIcon from '@material-ui/icons/School';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -149,18 +150,22 @@ const MiniDrawer = (props) => {
           </div>
           <Divider />
           <List>
-            <ListItem button>
-              <ListItemIcon><ClassIcon /></ListItemIcon>
-              <ListItemText primary={'Класи'} />
-            </ListItem>
             {isAdmin ? <ListItem button onClick={() => { router.push('/admin/users') }}>
               <ListItemIcon><PersonIcon /></ListItemIcon>
               <ListItemText primary={'Користувачі'} />
             </ListItem> : <></>}
-            {isAdmin ? <ListItem button>
+            <ListItem button onClick={() => { router.push('/admin/students') }}>
+              <ListItemIcon><SchoolIcon /></ListItemIcon>
+              <ListItemText primary={'База даних учнів'} />
+            </ListItem>
+            <ListItem button onClick={() => { router.push('/admin/classes') }}>
+              <ListItemIcon><ClassIcon /></ListItemIcon>
+              <ListItemText primary={'Класи'} />
+            </ListItem>
+            <ListItem button>
               <ListItemIcon><TocIcon /></ListItemIcon>
               <ListItemText primary={'Оцінки'} />
-            </ListItem> : <></>}
+            </ListItem>
             <Divider />
             <ListItem button onClick={() => {
               signOut(()=> router.push('/'));

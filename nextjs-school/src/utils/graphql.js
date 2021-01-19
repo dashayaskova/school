@@ -34,7 +34,9 @@ export const clientGraphql = async (query, vars) => {
             variables: vars
         })
     })
+    
     const json = await response.json();
+
     if (json.errors) {
         console.log('Errors in request', json.errors);
     }

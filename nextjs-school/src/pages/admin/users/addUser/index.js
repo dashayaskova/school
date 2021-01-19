@@ -1,9 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Navbar from '../../../../components/Navbar';
-import UserForm from '../../../../components/UserForm';
-import { addUser } from '../../../../actions';
+import Navbar from '@/components/Navbar';
+import UserForm from '@/components/UserForm';
+import { addUser } from '@/actions';
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -16,7 +16,7 @@ const AddUser = (props) => {
 
     return (
         <Navbar title="Додати користувача">
-            <UserForm onFormSubmit={onSubmit} user={{ classAccess: [], isAdmin: false }} />
+            <UserForm onFormSubmit={onSubmit} user={{ classAccess: [], isAdmin: false }} params={props.params} classes={props.classes} />
         </Navbar>
     );
 };

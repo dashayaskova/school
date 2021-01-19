@@ -16,7 +16,6 @@ export const signOut = async (onSuccess, onError) => {
     }
 };
 
-
 export const signIn = async (email, password, onSuccess, onError) => {
     const firebase = getFirebase();
 
@@ -25,7 +24,7 @@ export const signIn = async (email, password, onSuccess, onError) => {
         if (res && res.user) {
             const status = await postUserToken(await res.user.getIdToken());
             if (status === 200) {
-                if (onSuccess) onSuccess();
+                if (onSuccess) onSuccess(res.user);
             } else {
                 if (onError) onError();
             }

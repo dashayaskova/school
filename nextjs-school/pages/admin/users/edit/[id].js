@@ -1,3 +1,3 @@
-export { default } from '../../../../src/pages/admin/users/editUser';
+export { default } from '@/pages/admin/users/editUser';
 
-export { getServerSideProps } from '../../../../src/pages/admin/users/editUser/dataFetching';
+export { getServerSideProps } from '@/pages/admin/users/editUser/dataFetching';

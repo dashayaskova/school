@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     TextField,
@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { getClasses, signIn } from '../../actions';
+import { getClasses, signIn } from '@/actions';
 import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
@@ -69,7 +69,7 @@ const Login = (props) => {
                         color="secondary"
                         size="large"
                         onClick={e => signIn(email, password, () => window.location.reload(), 
-                            () => { setOpen(true); })}
+                            (user) => { setOpen(true); })}
                         className={classes.button}
                     >
                         Увійти

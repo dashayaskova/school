@@ -41,6 +41,37 @@ const Table = (props) => {
     return (
         <MaterialTable
             icons = {tableIcons}
+            options={{
+                grouping: true,
+                paginationType: 'stepped'
+            }}
+            localization={{
+                header: {
+                    actions: 'Дії'
+                },
+                toolbar: {
+                    searchPlaceholder: "Шукати",
+                    searchTooltip: "Шукати"
+                },
+                body: {
+                    addTooltip: "Додати",
+                    editTooltip: "Редагувати",
+                    deleteTooltip: "Видалити",
+                    editRow: {
+                        deleteText: "Ви дійсно хочете видалити цей рядок?"
+                    }
+                },
+                pagination: {
+                    labelRowsSelect: "рядків",
+                    firstTooltip: "Перша сторінка",
+                    previousTooltip: "Минула сторінка",
+                    nextTooltip: "Наступна сторінка",
+                    lastTooltip: "Остання сторінка"
+                },
+                grouping: {
+                    placeholder: "Перетягуйте стовпці, щоб змінити їх порядок"
+                }
+            }}
             {...props}
         />
     );

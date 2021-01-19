@@ -9,9 +9,27 @@ export async function getUsers(req) {
                 name
                 email
                 classAccess {
-                    id
-                    name
+                    class {
+                        id
+                        name
+                    }
+                    subjectAccess {
+                        id
+                        name
+                    }
                 }
+            } 
+        }`);
+    return data.users;
+}
+
+export async function getTeachers(req) {
+    const data = await serverGraphql(req, `
+        query {
+            users(isAdmin: false) { 
+                id
+                name
+                email
             } 
         }`);
     return data.users;
@@ -19,7 +37,7 @@ export async function getUsers(req) {
 
 export async function getUser(req, id) {
     const data = await serverGraphql(req, `
-            query ($id: String!){
+            query($id: String!) {
                 user(id: $id) {
                     id
                     name
@@ -27,12 +45,20 @@ export async function getUser(req, id) {
                     email
                     uid
                     classAccess {
-                        id
-                        name
+                        class {
+                            id
+                            name
+                            year
+                        }
+                        subjectAccess {
+                            id
+                            name
+                        }
                     }
               }
             }`,
-        { id: id });
+        { id });
+
     return data.user;
 }
 
@@ -49,7 +75,12 @@ export async function deleteUser(id) {
 export async function addUser(user, onSuccess, onError) {
     const body = {
         ...user,
-        classAccess: user.classAccess.map(el => el.id),
+        classAccess: user.classAccess.map(e1 => 
+            ({ 
+                classId: e1.class.id, 
+                subjectAccess: e1.subjectAccess.map(e2 => e2.id)
+            })
+        )
     };
 
     const res = await fetch('/auth/signup', {
@@ -72,7 +103,7 @@ export async function addUser(user, onSuccess, onError) {
         `mutation (
             $name: String!
             $isAdmin: Boolean!
-            $classAccess: [String!]!
+            $classAccess: [ClassSubjectsInput]
             $email: String!
             $uid: String!
           ) {
@@ -88,11 +119,17 @@ export async function addUser(user, onSuccess, onError) {
               name
               email
               classAccess {
-                id
-                name
-              }
+                class {
+                    id
+                    name
+                    year
+                }
+                subjectAccess {
+                    name
+                }
             }
-          }
+        }
+    }
         `, body);
     if (!gql_res) {
         if (onError) onError();
@@ -103,12 +140,19 @@ export async function addUser(user, onSuccess, onError) {
 }
 
 export async function editUser(user, onSuccess, onError) {
+    let u = {...user, classAccess: user.classAccess.map(e1 => 
+        ({ 
+            classId: e1.class.id, 
+            subjectAccess: e1.subjectAccess.map(e2 => e2.id)
+        })
+    )};
+
     const response = await clientGraphql(
         `mutation (
             $id: String!
             $name: String!
             $isAdmin: Boolean!
-            $classAccess: [String!]!
+            $classAccess: [ClassSubjectsInput]
             $email: String!
             $uid: String!
           ) {
@@ -124,12 +168,18 @@ export async function editUser(user, onSuccess, onError) {
               name
               email
               classAccess {
-                id
-                name
-              }
+                class {
+                    id
+                    name
+                    year
+                }
+                subjectAccess {
+                    name
+                }
             }
-          }`, 
-        {...user, classAccess: user.classAccess.map(el => el.id) });
+        }
+    }`, 
+        u);
     
     if (!response) {
         if (onError) onError();
