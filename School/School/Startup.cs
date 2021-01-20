@@ -58,6 +58,7 @@ namespace School
 			services.AddSingleton<StudentInputType>();
 			services.AddSingleton<GradeSpaceInputType>();
 			services.AddSingleton<GradeInputType>();
+			services.AddSingleton<SubjectInputType>();
 			services.AddSingleton<Query>();
 			services.AddSingleton<Mutation>();
 			services.AddSingleton<SchoolSchema>();

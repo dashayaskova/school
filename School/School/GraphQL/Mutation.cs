@@ -15,7 +15,8 @@ namespace School.GraphQL
             ClassService cs, 
             StudentService ss,
             GradeSpaceService gss,
-            GradeService gs)
+            GradeService gs,
+            SubjectService subS)
         {
             Name = "Mutation";
 
@@ -120,6 +121,52 @@ namespace School.GraphQL
                     ss.Add(student);
                     return student;
                 });
+            
+            Field<SubjectType>(
+                "createSubject",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<SubjectInputType>> { Name = "data" }
+                ),
+                resolve: context =>
+                {
+                    var subjectInput = context.GetArgument<SubjectInput>("data");
+                    var subject = new Subject()
+                    {
+                        Name = subjectInput.Name,
+                        Class = ObjectId.Parse(subjectInput.Class),
+                    };
+                    subS.Add(subject);
+                    return subject;
+                });
+            
+            Field<SubjectType>(
+                "editSubject",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<SubjectInputType>> { Name = "data" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                resolve: context =>
+                {
+                    var subject = context.GetArgument<SubjectInput>("data");
+                    var id = context.GetArgument<string>("id");
+                    var student = subS.EditSubject(id, subject);
+                    return student;
+                });
+            
+            Field<BooleanGraphType>(
+                "deleteSubject",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                resolve: context => 
+                {
+                    var id = context.GetArgument<string>("id");
+                    var res = subS.Delete(id);
+                    var gradeSpaces = gss.GetBySubjectId(id);
+                    gss.DeleteBySubject(ObjectId.Parse(id));
+                    gs.DeleteByGradeSpaces(gradeSpaces.Select(e => ObjectId.Parse(e.Id)));
+                    return res;
+                });
 
             Field<ListGraphType<GradeType>>(
                 "createGrades",
@@ -206,7 +253,7 @@ namespace School.GraphQL
                 {
                     var id = context.GetArgument<string>("id");
                     var result = gss.Delete(id);
-                    gs.RemoveByGradeSpace(id);
+                    gs.DeleteByGradeSpace(id);
                     return result;
                 });
             

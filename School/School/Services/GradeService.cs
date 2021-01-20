@@ -55,9 +55,12 @@ namespace School.Services
             }
         }
 
-        public void RemoveByGradeSpace(string id) {
-            _collection.DeleteMany(
-                Builders<Grade>.Filter.Eq("GradeSpace", ObjectId.Parse(id)));
+        public void DeleteByGradeSpace(string id) {
+            Delete(Builders<Grade>.Filter.Eq("GradeSpace", ObjectId.Parse(id)));
+        }
+
+        public void DeleteByGradeSpaces(IEnumerable<ObjectId> ids) {
+            Delete(Builders<Grade>.Filter.In("GradeSpace", ids));
         }
     }
 }

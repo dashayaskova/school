@@ -58,7 +58,13 @@ const UserForm = (props) => {
 
   const handleDeleteItem = (id) => {
     setUser({ ...user, classAccess: user.classAccess.filter(el => el.class.id != id) });
-  }
+  };
+
+  const handleFormSubmit = () => {
+    props.onFormSubmit({...user, ...(user.isAdmin && {classAccess: [] }) },
+      () => { window.location.pathname = '/users' },
+      () => { setOpenError(true) });
+  };
 
   const listItems = user.classAccess.map((classObj) =>
     <ListItem key={classObj.class.id}>
@@ -130,10 +136,7 @@ const UserForm = (props) => {
           />
         </div>
         <Button
-          onClick={() => props.onFormSubmit(
-            user,
-            () => { window.location.pathname = '/admin/users' },
-            () => { setOpenError(true) })}
+          onClick={handleFormSubmit}
           variant="contained"
           color="secondary"
           className={classes.submit}

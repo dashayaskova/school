@@ -22,8 +22,9 @@ import ClassIcon from '@material-ui/icons/Class';
 import PersonIcon from '@material-ui/icons/Person';
 import TocIcon from '@material-ui/icons/Toc';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { UserContext } from '../../pages/_app';
 
-import {signOut} from '../actions';
+import { signOut } from '../actions';
 
 const drawerWidth = 240;
 
@@ -100,86 +101,89 @@ const useStyles = makeStyles((theme) => ({
 
 const MiniDrawer = (props) => {
   const router = useRouter();
-  const isAdmin = router.pathname.startsWith("/admin");
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className={classes.root}>
-      <AppBar
-          position="fixed"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() => setOpen(true)}
-              edge="start"
-              className={clsx(classes.menuButton, {
-                [classes.hide]: open,
-              })}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap>
-              {props.title}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
-          classes={{
-            paper: clsx({
+    <UserContext.Consumer>
+      {value =>
+        <div className={classes.root}>
+          <AppBar
+            position="fixed"
+            className={clsx(classes.appBar, {
+              [classes.appBarShift]: open,
+            })}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={() => setOpen(true)}
+                edge="start"
+                className={clsx(classes.menuButton, {
+                  [classes.hide]: open,
+                })}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap>
+                {props.title}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawer, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
-            }),
-          }}
-        >
-          <div className={classes.toolbar}>
-            <IconButton onClick={() => setOpen(false)}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            {isAdmin ? <ListItem button onClick={() => { router.push('/admin/users') }}>
-              <ListItemIcon><PersonIcon /></ListItemIcon>
-              <ListItemText primary={'Користувачі'} />
-            </ListItem> : <></>}
-            <ListItem button onClick={() => { router.push('/admin/students') }}>
-              <ListItemIcon><SchoolIcon /></ListItemIcon>
-              <ListItemText primary={'База даних учнів'} />
-            </ListItem>
-            <ListItem button onClick={() => { router.push('/admin/classes') }}>
-              <ListItemIcon><ClassIcon /></ListItemIcon>
-              <ListItemText primary={'Класи'} />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon><TocIcon /></ListItemIcon>
-              <ListItemText primary={'Оцінки'} />
-            </ListItem>
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+              }),
+            }}
+          >
+            <div className={classes.toolbar}>
+              <IconButton onClick={() => setOpen(false)}>
+                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              </IconButton>
+            </div>
             <Divider />
-            <ListItem button onClick={() => {
-              signOut(()=> router.push('/'));
-            }}>
-              <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-              <ListItemText primary={'Вийти'} />
-            </ListItem>
-          </List>
-        </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {props.children}
-      </main>
-    </div>
+            <List>
+              { value.isAdmin && <ListItem button onClick={() => { router.push('/users') }}>
+                <ListItemIcon><PersonIcon /></ListItemIcon>
+                <ListItemText primary={'Користувачі'} />
+              </ListItem> }
+              <ListItem button onClick={() => { router.push('/students') }}>
+                <ListItemIcon><SchoolIcon /></ListItemIcon>
+                <ListItemText primary={'База даних учнів'} />
+              </ListItem>
+              <ListItem button onClick={() => { router.push('/classes') }}>
+                <ListItemIcon><ClassIcon /></ListItemIcon>
+                <ListItemText primary={'Класи'} />
+              </ListItem>
+              <ListItem button onClick={() => { router.push('/subjects') }}>
+                <ListItemIcon><TocIcon /></ListItemIcon>
+                <ListItemText primary={'Оцінки'} />
+              </ListItem>
+              <Divider />
+              <ListItem button onClick={() => {
+                signOut(() => router.push('/'));
+              }}>
+                <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+                <ListItemText primary={'Вийти'} />
+              </ListItem>
+            </List>
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
+            {props.children}
+          </main>
+        </div>
+      }
+    </UserContext.Consumer>
   );
 }
 

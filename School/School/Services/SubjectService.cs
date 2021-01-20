@@ -2,42 +2,28 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using School.Models;
+using School.GraphTypes;
 using MongoDB.Bson;
 
 namespace School.Services
 {
-    public class SubjectService
+    public class SubjectService : BaseService<Subject>
     {
-        private readonly IMongoCollection<Subject> _subjects;
-
-        private FilterDefinition<Subject> idFilter(string id) 
-            => Builders<Subject>.Filter.Eq("_id", ObjectId.Parse(id));
-
-        public SubjectService(ISchoolDatabaseSettings settings)
+        public SubjectService(ISchoolDatabaseSettings settings):base(settings)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-
-            _subjects = database.GetCollection<Subject>("Subjects");
+            _collection = _database.GetCollection<Subject>("Subjects");
         }
 
         public List<Subject> GetByClassId(string classId) {
             return Get(Builders<Subject>.Filter.Eq("Class", ObjectId.Parse(classId)));
         }
-
-        public Subject GetById(string id) =>
-            _subjects.Find(idFilter(id)).FirstOrDefault();
         
-        public List<Subject> Get(FilterDefinition<Subject> filter) =>
-            _subjects.Find(filter).ToList();
-
-        public List<Subject> Get() =>
-            _subjects.Find(SubjectObj => true).ToList();
-        
-        public void AddSubject(Subject SubjectObj) =>
-            _subjects.InsertOne(SubjectObj);
-        
-        public bool deleteSubject(string id)
-            =>  _subjects.DeleteOne(idFilter(id)).DeletedCount == 1; 
+        public Subject EditSubject(string id, SubjectInput si) {
+            var s = _collection.Find(idFilter(id)).First();
+            s.Name = si.Name;
+            s.Class = ObjectId.Parse(si.Class);
+            _collection.ReplaceOne(idFilter(id), s);
+            return s;
+        }
     }
 }

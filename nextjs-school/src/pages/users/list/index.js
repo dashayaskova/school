@@ -22,16 +22,16 @@ const UserList = (props) => {
   const [teachers, setTeachers] = useState(props.teachers);
 
   return (
-    <Navbar title={"Користувачі"}>
+    <Navbar title={"Користувачі"} user={props.user}>
       <Button className={classes.addUser} color={"secondary"} variant={"contained"}
-        onClick={() => Router.push("/admin/users/add")}>Додати користувача</Button>
+        onClick={() => Router.push("/users/add")}>Додати користувача</Button>
 
       <Table
         title=""
         columns={[
-          { title: 'Name', field: 'name' },
+          { title: 'ФІО', field: 'name' },
           { title: 'Email', field: 'email' },
-          { title: 'Admin', field: 'isAdmin', type: 'boolean' }
+          { title: 'Адміністратор', field: 'isAdmin', type: 'boolean' }
         ]}
         data={teachers}
         actions={[
@@ -39,7 +39,7 @@ const UserList = (props) => {
             icon: () => <Edit />,
             tooltip: 'Edit User',
             onClick: (event, rowData) => {
-              Router.push(`/admin/users/edit/${rowData.id}`);
+              Router.push(`/users/edit/${rowData.id}`);
             }
           }
         ]}

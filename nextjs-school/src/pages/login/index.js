@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { getClasses, signIn } from '@/actions';
+import { signIn } from '@/actions';
 import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({

@@ -22,16 +22,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ClassesList = (props) => {
   const classes = useStyles();
-  const [years] = useState(props.params.years);
-  // const [teachers] = useState(props.teachers);
+  const years = props.params.years;
   const [cntYear, setCntYear] = useState(props.params.currentYear);
   const [classesObj, setClasses] = useState(props.classes);
-  const [filteredClasses, setFilteredClasses] = useState([]);
-
-  //can redo filtered classes without using state
-  useEffect(() => {
-    setFilteredClasses(classesObj.filter(el => el.year === cntYear));
-  }, [classesObj, cntYear]);
+  const filteredClasses = classesObj.filter(el => el.year === cntYear);
 
   const handleChange = (event) => {
     setCntYear(event.target.value);
@@ -73,18 +67,19 @@ const ClassesList = (props) => {
               icon: () => <SearchIcon />,
               tooltip: 'Переглянути',
               onClick: (event, rowData) => {
-                Router.push(`/admin/classes/${rowData.id}`);
+                Router.push(`/classes/${rowData.id}`);
               }
             }
           ]}
           editable={{
-            onRowAdd: newData =>
+            ...(props.user.isAdmin && { onRowAdd: newData =>
               new Promise((resolve, reject) => {
                 addClass({ ...newData },
                   (resp) => setClasses([...classesObj, resp]));
 
                 resolve();
               }),
+            }),
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
                 const id = oldData.id;

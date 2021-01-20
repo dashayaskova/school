@@ -62,6 +62,33 @@ export async function getUser(req, id) {
     return data.user;
 }
 
+
+export async function getUserClasses(req, uid) {
+    const data = await serverGraphql(req, `
+            query($uid: String!) {
+                userByUid(uid: $uid) {
+                    id
+                    classAccess {
+                        class {
+                            id
+                            name
+                            year
+                        }
+                        subjectAccess {
+                            id
+                            name
+                            class {
+                                id
+                            }
+                        }
+                    }
+              }
+            }`,
+        { uid });
+
+    return data.userByUid;
+}
+
 export async function deleteUser(id) {
     const response = await clientGraphql(
         `mutation($id: String!) {

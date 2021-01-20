@@ -14,8 +14,8 @@ namespace School.Services
             _collection = _database.GetCollection<GradeSpace>("GradeSpaces");
         }
 
-        public List<GradeSpace> GetBySubjectId(ObjectId subjectId) {
-            return Get(Builders<GradeSpace>.Filter.Eq("Subject", subjectId));
+        public List<GradeSpace> GetBySubjectId(string subjectId) {
+            return Get(Builders<GradeSpace>.Filter.Eq("Subject", ObjectId.Parse(subjectId)));
         }
 
         public GradeSpace EditGradeSpace(string id, GradeSpaceInput gsi) {
@@ -25,6 +25,10 @@ namespace School.Services
             grade.Type = gsi.Type;
             _collection.ReplaceOne(idFilter(id), grade);
             return grade;
+        }
+
+        public void DeleteBySubject(ObjectId subId) {
+            Delete(Builders<GradeSpace>.Filter.Eq("Subject", subId));
         }
     }
 }

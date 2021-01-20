@@ -36,5 +36,8 @@ namespace School.Services
         
         public bool Delete(string id)
             =>  _collection.DeleteOne(idFilter(id)).DeletedCount == 1; 
+        
+        public DeleteResult Delete(FilterDefinition<T> filter) =>
+            _collection.DeleteMany(filter);
     }
 }

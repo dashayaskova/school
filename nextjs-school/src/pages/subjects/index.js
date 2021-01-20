@@ -5,7 +5,8 @@ import {
     FormControl,
     Select,
     InputLabel,
-    MenuItem
+    MenuItem,
+    Box
 } from '@material-ui/core';
 import _ from 'lodash';
 
@@ -19,18 +20,20 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        marginBottom: theme.spacing(1),
+        marginBottom: theme.spacing(1)
     }
 }));
 
 const SubjectClass = (props) => {
     const classes = useStyles();
+    const cntMonth = new Date().month;
     const students = props.subject.class.students;
     const [gradeSpaces, setGradeSpaces] = useState(props.subject.gradeSpaces);
     const [grades, setGrades] = useState(props.grades);
     const [open, setOpen] = useState(false);
-    const [semester, setSemester] = useState('');
+    const [semester, setSemester] = useState(cntMonth >= 9 && cntMonth <= 12 ? "sem1" : "sem2");
     const stDict = {};
+
 
     const filteredGradeSpaces = gradeSpaces.filter(el => {
         let month = new Date(el.date).getMonth() + 1;
@@ -40,8 +43,6 @@ const SubjectClass = (props) => {
                 return month >= 9 && month <= 12;
             case "sem2":
                 return month >= 1 && month <= 5;
-            default:
-                return true;
         }
     });
 
@@ -57,7 +58,6 @@ const SubjectClass = (props) => {
         return res;
     });
 
-    //TODO checks whether it works okay
     const gradesColumns = filteredGradeSpaces
         .sort(function (a, b) {
             return new Date(a.date) - new Date(b.date);
@@ -124,7 +124,7 @@ const SubjectClass = (props) => {
     };
 
     return (
-        <Navbar title={props.subject.name}>
+        <Navbar title={`${props.subject.name} ${props.subject.class.name}`}>
             <div className={classes.buttons}>
                 <FormControl variant="outlined" className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">Рік</InputLabel>
@@ -135,11 +135,11 @@ const SubjectClass = (props) => {
                         label="Семестр"
                         value={semester}
                     >
-                        <MenuItem value="">-</MenuItem>
                         <MenuItem value="sem1">Семестр 1</MenuItem>
                         <MenuItem value="sem2">Семестр 2</MenuItem>
                     </Select>
                 </FormControl>
+                <Box m={1} />
                 <Button color={"secondary"} variant={"contained"}
                     onClick={() => setOpen(true)}>Редагувати колонки</Button>
             </div>

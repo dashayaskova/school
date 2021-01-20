@@ -22,7 +22,7 @@ namespace School.GraphTypes
                 });
             Field<ListGraphType<GradeSpaceType>>("GradeSpaces",
                 resolve: context => {
-                        return gss.GetBySubjectId(ObjectId.Parse(context.Source.Id));
+                        return gss.GetBySubjectId(context.Source.Id);
                 });
         }
     }

@@ -42,7 +42,7 @@ namespace School.GraphQL
             {
                 //var gradeSpaces = context.GetArgument<List<string>>("gradeSpaces");
                 var id = context.GetArgument<string>("id");
-                var gradeSpaces = gss.GetBySubjectId(ObjectId.Parse(id)).Select(e => e.Id);
+                var gradeSpaces = gss.GetBySubjectId(id).Select(e => e.Id);
                 return gs.GetByGradeSpaces(gradeSpaces);
             });
 
@@ -77,6 +77,17 @@ namespace School.GraphQL
             {
                 var userId = context.GetArgument<string>("id");
                 return us.GetById(userId);
+            });
+
+            Field<UserType>(
+            "userByUid",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "uid" }
+            ),
+            resolve: context =>
+            {
+                var uid = context.GetArgument<string>("uid");
+                return us.Get(uid);
             });
 
             Field<ListGraphType<ClassType>>(

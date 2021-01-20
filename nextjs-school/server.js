@@ -24,7 +24,6 @@ const proxyAuth = createProxyMiddleware({
 
 app.prepare().then(() => {
   const server = express();
-
   // Utils
   server.use(cookieParser());
   server.use(auth);
@@ -35,16 +34,16 @@ app.prepare().then(() => {
 
   server.get('/', (req, res, next) => {
     if (req.user) {
-      const url = req.user.isAdmin ? '/admin/users' : '/user/students';
+      const url = req.user.isAdmin ? '/users' : '/students';
       res.redirect(url);
     } else {
       next();
     }
   })
 
-  server.all('/admin/*', adminView, (req, res) => handle(req, res));
+  server.all('/users', adminView, (req, res) => handle(req, res));
 
-  server.all('/user/*', privateView, (req, res) => handle(req, res))
+  server.all('/bla/*', privateView, (req, res) => handle(req, res))
 
   server.all('*', (req, res) => handle(req, res));
 

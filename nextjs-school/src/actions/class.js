@@ -12,12 +12,12 @@ export async function getClasses() {
                 }
             } 
         }`)
-    
+
     return response.classes;
 }
 
 export async function getServerClasses(req) {
-    const data = await serverGraphql(req, 
+    const data = await serverGraphql(req,
         `query { 
             classes { 
                 name
@@ -29,13 +29,13 @@ export async function getServerClasses(req) {
                 }
             } 
         }`);
-        
+
     return data.classes;
 }
 
 export async function getServerClass(req, id) {
 
-    const data = await serverGraphql(req, 
+    const data = await serverGraphql(req,
         `query ($id: String!) { 
             class (id: $id) { 
                 name
@@ -57,8 +57,31 @@ export async function getServerClass(req, id) {
     return data.class;
 }
 
+export async function getClassSubjects(id, onSuccess, onError) {
+    const response = await clientGraphql(`
+        query ($id: String!) { 
+            class (id: $id) { 
+                id
+                subjects {
+                    id
+                    name
+                    class {
+                      id
+                    }
+                }
+            } 
+        }`, { id });
+
+    if (!response) {
+        if (onError) onError();
+        return;
+    }
+
+    if (onSuccess) onSuccess(response.class.subjects);
+}
+
 export async function getServerYears(req) {
-    const data = await serverGraphql(req, 
+    const data = await serverGraphql(req,
         `query { 
             params { 
                 years
@@ -80,7 +103,7 @@ export async function deleteClass(id, onSuccess, onError) {
         if (onError) onError();
         return;
     }
-    
+
     if (onSuccess) onSuccess(response.deleteClass);
 }
 
@@ -100,7 +123,7 @@ export async function editClass(classObj, onSuccess, onError) {
               name
             }
           }`, classObj);
-    
+
     if (!response) {
         if (onError) onError();
         return;
@@ -124,7 +147,7 @@ export async function addClass(classObj, onSuccess, onError) {
               name
             }
           }`, classObj);
-    
+
     if (!response) {
         if (onError) onError();
         return;

@@ -54,12 +54,13 @@ const StudentsList = (props) => {
 
                 resolve();
             }),
-          onRowDelete: oldData =>
+            ...(props.user.isAdmin && { onRowDelete: oldData =>
             new Promise(async (resolve, reject) => {
               const id = oldData.id;
               deleteStudent(id, (resp) => setStudents(students.filter((el) => id !== el.id)));
               resolve()
-            }),
+            })
+          })
         }}
       />
     </Navbar>
