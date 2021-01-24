@@ -37,15 +37,15 @@ app.prepare().then(() => {
       const url = req.user.isAdmin ? '/users' : '/students';
       res.redirect(url);
     } else {
-      next();
+      return handle(req, res)
     }
   })
 
-  server.all('/users', adminView, (req, res) => handle(req, res));
+  server.all('/users*', adminView, (req, res) => handle(req, res));
 
-  server.all('/bla/*', privateView, (req, res) => handle(req, res))
-
-  server.all('*', (req, res) => handle(req, res));
+  server.all('/_next*', (req, res) => handle(req, res));
+  
+  server.all('*', privateView, (req, res) => handle(req, res));
 
   server.listen(port, (err) => {
     if (err) throw err;

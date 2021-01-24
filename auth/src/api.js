@@ -61,6 +61,22 @@ router.post('/signup', protectedView, async (req, res) => {
     }
 });
 
+router.delete('/:uid', protectedView, async (req, res) => {
+    const admin = await getFirebaseAdmin();
+
+    try {
+        if (req.user.admin) {
+            await admin.auth().deleteUser(req.params.uid);
+            res.sendStatus(200);
+            return;
+        }
+
+        res.status(400).send('Bad Request');
+    } catch (e) {
+        res.status(400).send('Bad Request');
+    }
+});
+
 router.post('/logout', protectedView, async (req, res) => {
     res.clearCookie(AUTH_COOKIE_NAME);
     res.send();

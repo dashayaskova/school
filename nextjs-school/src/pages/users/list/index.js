@@ -8,7 +8,7 @@ import Edit from '@material-ui/icons/Edit';
 
 import Navbar from '@/components/Navbar';
 import Table from '@/components/Table';
-import { deleteUser } from '@/actions';
+import { deleteUser, deleteFirebaseUser } from '@/actions';
 
 const useStyles = makeStyles((theme) => ({
   addUser: {
@@ -47,7 +47,7 @@ const UserList = (props) => {
           onRowDelete: oldData =>
             new Promise(async (resolve, reject) => {
               const id = oldData.id;
-              var success = await deleteUser(id);
+              var success = await deleteUser(id, async () => await deleteFirebaseUser(oldData.uid));
               if (success) {
                 const newArr = teachers.filter((el) => el.id !== id);
                 setTeachers(newArr);

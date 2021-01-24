@@ -58,7 +58,7 @@ const StudentsDialog = (props) => {
 
     return (
         <Dialog classes={{ paper: classes.paper }} onClose={() => onClose()} open={open}>
-            <Button onClick={() => Router.push(`/admin/students`)} className={classes.createBtn} variant={"contained"} autoFocus color="secondary">
+            <Button onClick={() => Router.push(`/students`)} className={classes.createBtn} variant={"contained"} autoFocus color="secondary">
                 Створити учня
             </Button>
             <div className={classes.row}>

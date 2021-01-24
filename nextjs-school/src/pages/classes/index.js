@@ -3,11 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Button,
   } from '@material-ui/core';
+import Router from 'next/router'
 
 import Table from '@/components/Table';
 import Navbar from '@/components/Navbar'
 import StudentsDialog from '@/components/StudentsDialog';
 import { removeStudentFromClass } from '@/actions/student';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
     addStudent: {
@@ -43,6 +45,15 @@ const StudentsClass = (props) => {
                     { title: 'Номер особ. справи', field: 'registryId' },
                 ]}
                 data={classObj.students}
+                actions={[
+                    {
+                      icon: () => <SearchIcon />,
+                      tooltip: 'Переглянути табель',
+                      onClick: (event, rowData) => {
+                        Router.push(`/classes/${classObj.id}/students/${rowData.id}`);
+                      }
+                    }
+                  ]}
                 editable={{
                     onRowDelete: oldData =>
                       new Promise(async (resolve, reject) => {

@@ -24,7 +24,7 @@ namespace School.GraphTypes
                     if (context.Source.ClassAccess != null)
                     {
                         var ids = context.Source.ClassAccess.Select(e => e.ClassId).ToList();
-                        var classes = cs.Get(Builders<Class>.Filter.In("_id", ids));
+                        var classes = cs.GetByIds(ids);
                         var joined = context.Source.ClassAccess.Join<ClassSubjects, Class, string, ClassSubjects>(
                             classes,
                             e => e.ClassId.ToString(),
@@ -52,12 +52,11 @@ namespace School.GraphTypes
             Field<ClassType>("Class", resolve: context =>
                 {
                     return context.Source.Class;
-                    // return cs.GetById(context.Source.ClassId.ToString());
                 });
 
             Field<ListGraphType<SubjectType>>("SubjectAccess", resolve: context =>
                 {
-                    return ss.Get(Builders<Subject>.Filter.In("_id", context.Source.SubjectAccess));
+                    return ss.GetByIds(context.Source.SubjectAccess);
                 });
         }
     }

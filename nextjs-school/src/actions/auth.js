@@ -11,7 +11,7 @@ export const signOut = async (onSuccess, onError) => {
         } else {
             if (onError) onError();
         }
-    } catch (e){
+    } catch (e) {
         if (onError) onError();
     }
 };
@@ -29,7 +29,24 @@ export const signIn = async (email, password, onSuccess, onError) => {
                 if (onError) onError();
             }
         }
-    } catch (e){
+    } catch (e) {
+        if (onError) onError();
+    }
+};
+
+export const deleteFirebaseUser = async (uid, onSuccess, onError) => {
+    try {
+        const { status } = await fetch(`/auth/${uid}`, {
+            method: 'DELETE',
+            credentials: 'same-origin',
+        });
+
+        if (status === 200) {
+            if (onSuccess) onSuccess(res.user);
+        } else {
+            if (onError) onError();
+        }
+    } catch (e) {
         if (onError) onError();
     }
 };

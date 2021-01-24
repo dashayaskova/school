@@ -152,19 +152,36 @@ const MiniDrawer = (props) => {
             </div>
             <Divider />
             <List>
-              { value.isAdmin && <ListItem button onClick={() => { router.push('/users') }}>
+              { value.isAdmin && 
+              <ListItem 
+                selected={router.pathname.startsWith('/users')} 
+                button 
+                onClick={() => { router.push('/users') }}>
                 <ListItemIcon><PersonIcon /></ListItemIcon>
                 <ListItemText primary={'Користувачі'} />
-              </ListItem> }
-              <ListItem button onClick={() => { router.push('/students') }}>
+              </ListItem> 
+              }
+              <ListItem
+                button
+                onClick={() => { router.push('/students') }}
+                selected={router.pathname.startsWith('/students')}
+              >
                 <ListItemIcon><SchoolIcon /></ListItemIcon>
                 <ListItemText primary={'База даних учнів'} />
               </ListItem>
-              <ListItem button onClick={() => { router.push('/classes') }}>
+              <ListItem 
+                button 
+                onClick={() => { router.push('/classes') }}
+                selected={router.pathname.startsWith('/classes')} 
+              >
                 <ListItemIcon><ClassIcon /></ListItemIcon>
                 <ListItemText primary={'Класи'} />
               </ListItem>
-              <ListItem button onClick={() => { router.push('/subjects') }}>
+              <ListItem 
+                button 
+                onClick={() => { router.push('/subjects') }}
+                selected={router.pathname.startsWith('/subjects')} 
+              >
                 <ListItemIcon><TocIcon /></ListItemIcon>
                 <ListItemText primary={'Оцінки'} />
               </ListItem>

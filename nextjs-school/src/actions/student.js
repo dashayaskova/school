@@ -167,3 +167,31 @@ export async function deleteStudent(id, onSuccess, onError) {
     
     if (onSuccess) onSuccess(response.deleteStudent);
 }
+
+export async function getStudentGrades(classId, studentId, req) {
+    const response = await serverGraphql(req, `query ($studentId: String!,
+            $classId: String!) {
+                studentGrades(studentId: $studentId, classId: $classId) {
+                    id
+                    mark
+                    student {
+                    id
+                    name
+                    }
+                    gradeSpace {
+                    id
+                    type
+                    subject {
+                        name
+                    }
+                }
+            }
+            student(id: $studentId) {
+                id
+                name
+                surname
+            }
+        }`, {classId, studentId});
+
+        return response;
+}

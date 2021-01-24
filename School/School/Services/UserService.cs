@@ -1,52 +1,56 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using School.Repository;
 using School.Models;
 using School.GraphTypes;
 using MongoDB.Bson;
 
 namespace School.Services
 {
-    public class UserService
+    public class UserService : BaseService<User>
     {
-        private readonly IMongoCollection<User> _users;
+        public UserService(BaseRepository<User> userRepository)
+            : base(userRepository) { }
 
-        private FilterDefinition<User> idFilter(string id) 
-            => Builders<User>.Filter.Eq("_id", ObjectId.Parse(id));
-
-        public UserService(ISchoolDatabaseSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-
-            _users = database.GetCollection<User>("Users");
+        public User GetByUid(string uid) {
+            return _baseRepository.Get(Builders<User>.Filter.Eq("Uid", uid)).First();
         }
 
-        public User Get(string uid) =>
-            _users.Find(Builders<User>.Filter.Eq("Uid", uid)).FirstOrDefault();
-
-        public User GetById(string id) =>
-            _users.Find(idFilter(id)).FirstOrDefault();
-        
-        public List<User> Get() =>
-            _users.Find(user => true).ToList();
-
-        public List<User> Get(bool isAdmin) =>
-            _users.Find(Builders<User>.Filter.Eq("IsAdmin", isAdmin)).ToList();
-
-        public void AddUser(User user) =>
-            _users.InsertOne(user);
-
-        public User EditUser(string id, UserInput ui)
-        {
-            var userDb = _users.Find(idFilter(id)).First();
-            userDb.Update(ui);
-            _users.ReplaceOne(idFilter(id), userDb);
-            return userDb;
+        public IEnumerable<User> GetTeachers() {
+            return _baseRepository.Get(Builders<User>.Filter.Eq("IsAdmin", false));
         }
 
-        public bool DeleteUser(string id)
-            =>  _users.DeleteOne(idFilter(id)).DeletedCount == 1; 
+        public User Add(UserInput userInput)
+        {
+            var user = new User()
+            {
+                Name = userInput.Name,
+                IsAdmin = userInput.IsAdmin,
+                Email = userInput.Email,
+                Uid = userInput.Uid,
+                ClassAccess = userInput.ClassAccess.Select(i => new ClassSubjects()
+                {
+                    ClassId = ObjectId.Parse(i.ClassId),
+                    SubjectAccess = i.SubjectAccess.Select(j => ObjectId.Parse(j)).ToList()
+                }).ToList()
+            };
 
+            _baseRepository.Add(user);
+            return user;
+        }
+
+        public User Edit(string id, UserInput userInput)
+        {
+            var user = _baseRepository.GetById(id);
+            user.Name = userInput.Name;
+            user.IsAdmin = userInput.IsAdmin;
+            user.ClassAccess = userInput.ClassAccess.Select(i => new ClassSubjects()
+            {
+                ClassId = ObjectId.Parse(i.ClassId),
+                SubjectAccess = i.SubjectAccess.Select(j => ObjectId.Parse(j)).ToList()
+            }).ToList();
+            return _baseRepository.Edit(id, user);
+        }
     }
 }

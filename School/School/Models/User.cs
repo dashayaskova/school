@@ -6,12 +6,9 @@ using System.Linq;
 
 namespace School.Models
 {
-    public class User
+    [BsonCollection("Users")]
+    public class User : Document
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         public string Name { get; set; }
 
         public string Email { get; set; }
@@ -21,18 +18,6 @@ namespace School.Models
         public string Uid { get; set; }
 
         public List<ClassSubjects> ClassAccess { get; set; }
-
-        public User() {}
-        
-        public void Update(UserInput ui)
-        {
-            Name = ui.Name;
-            IsAdmin = ui.IsAdmin;
-            ClassAccess = ui.ClassAccess.Select(i => new ClassSubjects() {
-                ClassId = ObjectId.Parse(i.ClassId),
-                SubjectAccess = i.SubjectAccess.Select(j => ObjectId.Parse(j)).ToList()
-            }).ToList();
-        }
     }
 
     public class ClassSubjects {

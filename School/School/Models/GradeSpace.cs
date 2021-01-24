@@ -5,11 +5,9 @@ using System;
 
 namespace School.Models
 {
-    public class GradeSpace
+    [BsonCollection("GradeSpaces")]
+    public class GradeSpace : Document
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public ObjectId Subject { get; set; }

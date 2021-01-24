@@ -6,12 +6,9 @@ using System.Linq;
 
 namespace School.Models
 {
-    public class Subject
+    [BsonCollection("Subjects")]
+    public class Subject : Document
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         public string Name { get; set; }
 
         public ObjectId Class { get; set; }

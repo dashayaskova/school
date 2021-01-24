@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
 import {
@@ -27,6 +27,10 @@ const AddClassDialog = (props) => {
         .filter(el => el.year === currentYear)
         .filter(e1 => !userClasses.map(e2 => e2.class.id).includes(e1.id));
 
+    useEffect(() => {
+        setCurrentClass(filteredClasses[0]);
+    }, [currentYear, userClasses]);
+    
     const handleClose = () => {
         if (currentClass) {
             setSelectedClasses(currentClass, selectedSubjects);

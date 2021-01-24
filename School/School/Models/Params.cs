@@ -6,11 +6,9 @@ using System.Linq;
 
 namespace School.Models
 {
-    public class Params
+    [BsonCollection("Params")]
+    public class Params : Document
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
         public string CurrentYear { get; set; }
         public List<string> Years { get; set; }
     }

@@ -26,21 +26,8 @@ namespace School.GraphQL
                     new QueryArgument<NonNullGraphType<UserInputType>> { Name = "data" }
                 ),
                 resolve: context =>
-                {
-                    var userInput = context.GetArgument<UserInput>("data");
-                    var user = new User()
-                    {
-                        Name = userInput.Name,
-                        IsAdmin = userInput.IsAdmin,
-                        Email = userInput.Email,
-                        Uid = userInput.Uid,
-                        ClassAccess = userInput.ClassAccess.Select(i => new ClassSubjects() {
-                            ClassId = ObjectId.Parse(i.ClassId),
-                            SubjectAccess = i.SubjectAccess.Select(j => ObjectId.Parse(j)).ToList()
-                        }).ToList()
-                    };
-                    us.AddUser(user);
-                    return user;
+                {   
+                    return us.Add(context.GetArgument<UserInput>("data"));
                 });
 
             Field<UserType>(
@@ -51,10 +38,8 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var userInput = context.GetArgument<UserInput>("data");
-                    var id = context.GetArgument<string>("id");
-
-                    return us.EditUser(id, userInput);
+                    return us.Edit(context.GetArgument<string>("id"),
+                     context.GetArgument<UserInput>("data"));
                 });
 
             Field<BooleanGraphType>(
@@ -63,7 +48,7 @@ namespace School.GraphQL
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
                 ),
                 resolve: context =>
-                     us.DeleteUser(context.GetArgument<string>("id"))
+                     us.Delete(context.GetArgument<string>("id"))
                 );
 
             Field<ClassType>(
@@ -73,18 +58,40 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var classInput = context.GetArgument<ClassInput>("data");
-                    var classObj = new Class()
-                    {
-                        Name = classInput.Name,
-                        Year = classInput.Year,
-                        // CurrentTeacher = ObjectId.Parse(classInput.CurrentTeacher),
-                        Students = new List<ObjectId>()
-                    };
-                    cs.Add(classObj);
-                    return classObj;
+                    return cs.Add(context.GetArgument<ClassInput>("data"));
                 });
             
+            Field<ClassType>(
+                "editClass",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<ClassInputType>> { Name = "data" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                resolve: context =>
+                {
+                    return cs.Edit(context.GetArgument<string>("id"), 
+                        context.GetArgument<ClassInput>("data"));
+                });
+
+            Field<BooleanGraphType>(
+                "deleteClass",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+                ),
+                resolve: context =>
+                     cs.Delete(context.GetArgument<string>("id"))
+                );
+            
+            Field<StudentType>(
+                "createStudent",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StudentInputType>> { Name = "data" }
+                ),
+                resolve: context =>
+                {
+                    return ss.Add(context.GetArgument<StudentInput>("data"));
+                });
+
             Field<StudentType>(
                 "editStudent",
                 arguments: new QueryArguments(
@@ -93,34 +100,18 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var s = context.GetArgument<StudentInput>("data");
-                    var id = context.GetArgument<string>("id");
-
-                    var student = ss.EditStudent(id, s);
-                    return student;
+                    return ss.Edit(context.GetArgument<string>("id"),
+                     context.GetArgument<StudentInput>("data"));
                 });
-
-            Field<StudentType>(
-                "createStudent",
+            
+            Field<BooleanGraphType>(
+                "deleteStudent",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StudentInputType>> { Name = "data" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
                 ),
                 resolve: context =>
-                {
-                    var s = context.GetArgument<StudentInput>("data");
-                    var student = new Student()
-                    {
-                        Birthday = s.Birthday,
-                        Email = s.Email,
-                        Name = s.Name,
-                        Patronymic = s.Patronymic,
-                        Phone = s.Phone,
-                        RegistryId = s.RegistryId,
-                        Surname = s.Surname
-                    };
-                    ss.Add(student);
-                    return student;
-                });
+                     ss.Delete(context.GetArgument<string>("id"))
+                );
             
             Field<SubjectType>(
                 "createSubject",
@@ -129,14 +120,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var subjectInput = context.GetArgument<SubjectInput>("data");
-                    var subject = new Subject()
-                    {
-                        Name = subjectInput.Name,
-                        Class = ObjectId.Parse(subjectInput.Class),
-                    };
-                    subS.Add(subject);
-                    return subject;
+                    return subS.Add(context.GetArgument<SubjectInput>("data"));
                 });
             
             Field<SubjectType>(
@@ -147,10 +131,8 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var subject = context.GetArgument<SubjectInput>("data");
-                    var id = context.GetArgument<string>("id");
-                    var student = subS.EditSubject(id, subject);
-                    return student;
+                    return subS.Edit(context.GetArgument<string>("id"), 
+                        context.GetArgument<SubjectInput>("data"));
                 });
             
             Field<BooleanGraphType>(
@@ -160,12 +142,7 @@ namespace School.GraphQL
                 ),
                 resolve: context => 
                 {
-                    var id = context.GetArgument<string>("id");
-                    var res = subS.Delete(id);
-                    var gradeSpaces = gss.GetBySubjectId(id);
-                    gss.DeleteBySubject(ObjectId.Parse(id));
-                    gs.DeleteByGradeSpaces(gradeSpaces.Select(e => ObjectId.Parse(e.Id)));
-                    return res;
+                    return subS.Delete(context.GetArgument<string>("id"));
                 });
 
             Field<ListGraphType<GradeType>>(
@@ -175,15 +152,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var list = context.GetArgument<List<GradeInput>>("data");
-                    var grades = list.Select(e => new Grade()
-                    {
-                        Mark = e.Mark,
-                        GradeSpace = ObjectId.Parse(e.GradeSpace),
-                        Student = ObjectId.Parse(e.Student),
-                    }).ToList();
-                    gs.AddRange(grades);
-                    return grades;
+                    return gs.Add(context.GetArgument<List<GradeInput>>("data"));
                 });
             
             Field<ListGraphType<GradeType>>(
@@ -193,13 +162,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var list = context.GetArgument<List<GradeInput>>("data");
-                    var grades = list.Select(e => new Grade()
-                    {
-                        Id = e.Id,
-                        Mark = e.Mark,
-                    }).ToList();;
-                    return gs.EditRange(grades);
+                    return gs.Edit(context.GetArgument<List<GradeInput>>("data"));
                 });
             
             Field<ListGraphType<StringGraphType>>(
@@ -209,9 +172,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var list = context.GetArgument<List<string>>("data");
-                    gs.RemoveRange(list);
-                    return list;
+                    return gs.Delete(context.GetArgument<List<string>>("data"));
                 });
 
             Field<GradeSpaceType>(
@@ -221,16 +182,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var s = context.GetArgument<GradeSpaceInput>("data");
-                    var gradeSpace = new GradeSpace()
-                    {
-                        Name = s.Name,
-                        Date = s.Date,
-                        Type = s.Type,
-                        Subject = ObjectId.Parse(s.Subject)
-                    };
-                    gss.Add(gradeSpace);
-                    return gradeSpace;
+                    return gss.Add(context.GetArgument<GradeSpaceInput>("data"));
                 });
             
             Field<GradeSpaceType>(
@@ -241,7 +193,7 @@ namespace School.GraphQL
                 resolve: context =>
                 {
                     var gradeSpace = context.GetArgument<GradeSpaceInput>("data");
-                    return gss.EditGradeSpace(gradeSpace.Id, gradeSpace);
+                    return gss.Edit(gradeSpace.Id, gradeSpace);
                 });
             
             Field<BooleanGraphType>(
@@ -251,10 +203,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var id = context.GetArgument<string>("id");
-                    var result = gss.Delete(id);
-                    gs.DeleteByGradeSpace(id);
-                    return result;
+                    return gss.Delete(context.GetArgument<string>("id"));;
                 });
             
             Field<ClassType>(
@@ -265,11 +214,9 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var newClass = cs.AddStudent(
+                    return cs.AddStudent(
                         context.GetArgument<string>("classId"), 
                         context.GetArgument<List<string>>("students"));
-
-                    return newClass;
                 });
             
             Field<BooleanGraphType>(
@@ -284,38 +231,6 @@ namespace School.GraphQL
                         context.GetArgument<string>("classId"), 
                         context.GetArgument<string>("studentId"));
                 });
-
-            Field<ClassType>(
-                "editClass",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<ClassInputType>> { Name = "data" },
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
-                ),
-                resolve: context =>
-                {
-                    var classInput = context.GetArgument<ClassInput>("data");
-                    var id = context.GetArgument<string>("id");
-
-                    return cs.EditClass(id, classInput);
-                });
-
-            Field<BooleanGraphType>(
-                "deleteClass",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
-                ),
-                resolve: context =>
-                     cs.Delete(context.GetArgument<string>("id"))
-                );
-            
-            Field<BooleanGraphType>(
-                "deleteStudent",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
-                ),
-                resolve: context =>
-                     ss.Delete(context.GetArgument<string>("id"))
-                );
         }
     }
 }

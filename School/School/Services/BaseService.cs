@@ -1,43 +1,36 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using School.Repository;
 using School.Models;
 using MongoDB.Bson;
 
 namespace School.Services
 {
-    public abstract class BaseService<T>
+    public abstract class BaseService<T> where T : Document 
     {
-        protected IMongoCollection<T> _collection;
-        protected IMongoDatabase _database;
-
-        public BaseService(ISchoolDatabaseSettings settings) {
-            var client = new MongoClient(settings.ConnectionString);
-            _database = client.GetDatabase(settings.DatabaseName);
+        public BaseRepository<T> _baseRepository;
+        public BaseService(BaseRepository<T> baseRepository) {
+            _baseRepository = baseRepository;
         }
 
-        protected FilterDefinition<T> idFilter(string id) 
-            => Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+        public IEnumerable<T> Get()
+        {
+            return _baseRepository.Get();
+        }
 
-        public T GetById(string id) =>
-            _collection.Find(idFilter(id)).FirstOrDefault();
         
-        public List<T> Get(FilterDefinition<T> filter) =>
-            _collection.Find(filter).ToList();
-        
-        public List<T> GetList() =>
-            _collection.Find(el => true).ToList();
-        
-        public T Get() =>
-            _collection.Find(el => true).First();
+        public IEnumerable<T> GetByIds(IEnumerable<ObjectId> list) {
+            return _baseRepository.Get(Builders<T>.Filter.In("_id", list));
+        }
 
-        public void Add(T classObj) =>
-            _collection.InsertOne(classObj);
-        
-        public bool Delete(string id)
-            =>  _collection.DeleteOne(idFilter(id)).DeletedCount == 1; 
-        
-        public DeleteResult Delete(FilterDefinition<T> filter) =>
-            _collection.DeleteMany(filter);
+        public T GetById(string id) {
+            return _baseRepository.GetById(id);
+        }
+
+        public virtual bool Delete(string id)
+        {
+            return _baseRepository.Delete(id).DeletedCount == 1;
+        }
     }
 }

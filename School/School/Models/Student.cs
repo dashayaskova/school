@@ -4,11 +4,9 @@ using System;
 
 namespace School.Models
 {
-    public class Student
+    [BsonCollection("Students")]
+    public class Student : Document
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Patronymic { get; set; }

@@ -30,6 +30,7 @@ const auth = async (req, res, next) => {
 }
 
 const privateView = (req, res, next) => {
+    console.log(req.url)
     if (req.user) {
         next();
     } else {

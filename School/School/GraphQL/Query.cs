@@ -1,8 +1,6 @@
 using GraphQL.Types;
 using School.Services;
 using School.GraphTypes;
-using System.Collections.Generic;
-using MongoDB.Bson;
 using System.Linq;
 
 namespace School.GraphQL
@@ -12,60 +10,26 @@ namespace School.GraphQL
         public Query(
             UserService us,
             ClassService cs,
-            ParamsService ps,
             StudentService ss,
             SubjectService subS,
 			GradeService gs,
-            GradeSpaceService gss)
+            GradeSpaceService gss,
+            ParamsService ps)
         {
             Name = "Query";
 
             Field<ListGraphType<UserType>>(
             "users",
-            arguments: new QueryArguments(
-                new QueryArgument<BooleanGraphType> { Name = "isAdmin" }
-            ),
             resolve: context =>
             {
-                var isAdmin = context.GetArgument<bool?>("isAdmin");
-                var get = isAdmin != null ? us.Get((bool)isAdmin) : us.Get();
-                return get;
+                return us.Get();
             });
 
-			Field<ListGraphType<GradeType>>(
-            "grades",
-            arguments: new QueryArguments(
-                //new QueryArgument<ListGraphType<StringGraphType>> { Name = "gradeSpaces" }
-                new QueryArgument<StringGraphType> { Name = "id" }
-            ),
+            Field<ListGraphType<UserType>>(
+            "teachers",
             resolve: context =>
             {
-                //var gradeSpaces = context.GetArgument<List<string>>("gradeSpaces");
-                var id = context.GetArgument<string>("id");
-                var gradeSpaces = gss.GetBySubjectId(id).Select(e => e.Id);
-                return gs.GetByGradeSpaces(gradeSpaces);
-            });
-
-			Field<SubjectType>(
-            "subject",
-            arguments: new QueryArguments(
-                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
-            ),
-            resolve: context =>
-            {
-                var subjectId = context.GetArgument<string>("id");
-                return subS.GetById(subjectId);
-            });
-
-			Field<ListGraphType<SubjectType>>(
-            "subjects",
-            arguments: new QueryArguments(
-                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "classId" }
-            ),
-            resolve: context =>
-            {
-                var classId = context.GetArgument<string>("classId");
-                return subS.GetByClassId(classId);
+                return us.GetTeachers();
             });
 
             Field<UserType>(
@@ -75,8 +39,7 @@ namespace School.GraphQL
             ),
             resolve: context =>
             {
-                var userId = context.GetArgument<string>("id");
-                return us.GetById(userId);
+                return us.GetById(context.GetArgument<string>("id"));
             });
 
             Field<UserType>(
@@ -86,15 +49,24 @@ namespace School.GraphQL
             ),
             resolve: context =>
             {
-                var uid = context.GetArgument<string>("uid");
-                return us.Get(uid);
+                return us.GetByUid(context.GetArgument<string>("uid"));
             });
-
+            
             Field<ListGraphType<ClassType>>(
             "classes",
             resolve: context =>
             {
-                return cs.GetList();
+                return cs.Get();
+            });
+
+            Field<ClassType>(
+            "class",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+            ),
+            resolve: context =>
+            {
+                return cs.GetById(context.GetArgument<string>("id"));
             });
 
             Field<ListGraphType<StudentType>>(
@@ -106,26 +78,67 @@ namespace School.GraphQL
             {
                 var surname = context.GetArgument<string>("surname");
                 return surname != null ?
-                    ss.GetStudentsBySurname(surname) :
-                    ss.GetList();
+                    ss.GetBySurname(surname) :
+                    ss.Get();
             });
 
-            Field<ClassType>(
-            "class",
+            Field<StudentType>(
+            "student",
             arguments: new QueryArguments(
                 new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
             ),
             resolve: context =>
             {
-                var classId = context.GetArgument<string>("id");
-                return cs.GetById(classId);
+                return ss.GetById(context.GetArgument<string>("id"));
+            });
+
+			Field<SubjectType>(
+            "subject",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+            ),
+            resolve: context =>
+            {
+                return subS.GetById(context.GetArgument<string>("id"));
+            });
+
+			Field<ListGraphType<SubjectType>>(
+            "subjects",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "classId" }
+            ),
+            resolve: context =>
+            {
+                return subS.GetByClassId(context.GetArgument<string>("classId"));
+            });
+
+			Field<ListGraphType<GradeType>>(
+            "grades",
+            arguments: new QueryArguments(
+                new QueryArgument<StringGraphType> { Name = "id" }
+            ),
+            resolve: context =>
+            {
+                return gs.GetBySubject(context.GetArgument<string>("id"));
+            });
+
+            Field<ListGraphType<GradeType>>(
+            "studentGrades",
+            arguments: new QueryArguments(
+                new QueryArgument<StringGraphType> { Name = "studentId" },
+                new QueryArgument<StringGraphType> { Name = "classId" }
+            ),
+            resolve: context =>
+            {
+                return subS.GetGradeReport(context.GetArgument<string>("classId"), 
+                    context.GetArgument<string>("studentId"));
             });
 
             Field<ParamsType>(
             "params",
             resolve: context =>
             {
-                return ps.Get();
+                return ps.Get().FirstOrDefault();
             });
         }
     }

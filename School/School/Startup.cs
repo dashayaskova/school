@@ -12,6 +12,7 @@ using School.Services;
 using School.GraphQL;
 using School.GraphTypes;
 using School.Models;
+using School.Repository;
 
 
 namespace School
@@ -37,13 +38,21 @@ namespace School
     		services.AddSingleton<ISchoolDatabaseSettings>(sp =>
         		sp.GetRequiredService<IOptions<SchoolDatabaseSettings>>().Value);
 
+			services.AddSingleton<BaseRepository<User>>();
+			services.AddSingleton<BaseRepository<Class>>();
+			services.AddSingleton<BaseRepository<Student>>();
+			services.AddSingleton<BaseRepository<Subject>>();
+			services.AddSingleton<BaseRepository<Grade>>();
+			services.AddSingleton<BaseRepository<GradeSpace>>();
+			services.AddSingleton<BaseRepository<Params>>();
+			services.AddSingleton<ParamsService>();
 			services.AddSingleton<UserService>();
 			services.AddSingleton<ClassService>();
 			services.AddSingleton<StudentService>();
-			services.AddSingleton<ParamsService>();
-			services.AddSingleton<SubjectService>();
 			services.AddSingleton<GradeSpaceService>();
 			services.AddSingleton<GradeService>();
+			services.AddSingleton<SubjectService>();
+			services.AddSingleton<ParamsService>();
 			services.AddSingleton<UserType>();
 			services.AddSingleton<ClassType>();
 			services.AddSingleton<ClassSubjectsType>();
@@ -84,7 +93,6 @@ namespace School
 			.UseGraphiQLServer(new GraphiQLOptions() { Path = "/"});
 
 			app.UseRouting();
-
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

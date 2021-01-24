@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using School.GraphQL;
 using System.Collections.Generic;
+using School.Repository;
 using School.Services;
 
 namespace School.Controllers
@@ -33,7 +34,7 @@ namespace School.Controllers
         public async Task<IActionResult> PostAsync([FromBody] GraphQLQuery query)
         {
             var user = Request.Headers["X-User-Uid"].Count != 0 ? 
-				_us.Get(Request.Headers["X-User-Uid"]) : null;
+				_us.GetByUid(Request.Headers["X-User-Uid"]) : null;
             var json = await _schema.ExecuteAsync(_ =>
             {
                 _.Query = query.Query;

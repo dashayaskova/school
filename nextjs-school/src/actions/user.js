@@ -8,6 +8,7 @@ export async function getUsers(req) {
                 isAdmin
                 name
                 email
+                uid
                 classAccess {
                     class {
                         id
@@ -26,13 +27,13 @@ export async function getUsers(req) {
 export async function getTeachers(req) {
     const data = await serverGraphql(req, `
         query {
-            users(isAdmin: false) { 
+            teachers { 
                 id
                 name
                 email
             } 
         }`);
-    return data.users;
+    return data.teachers;
 }
 
 export async function getUser(req, id) {
@@ -62,7 +63,6 @@ export async function getUser(req, id) {
     return data.user;
 }
 
-
 export async function getUserClasses(req, uid) {
     const data = await serverGraphql(req, `
             query($uid: String!) {
@@ -89,12 +89,15 @@ export async function getUserClasses(req, uid) {
     return data.userByUid;
 }
 
-export async function deleteUser(id) {
+export async function deleteUser(id, onSuccess) {
     const response = await clientGraphql(
         `mutation($id: String!) {
             deleteUser(id: $id)
         }`,
         { id });
+
+    if (response.deleteUser && onSuccess)
+        onSuccess();
 
     return response.deleteUser;
 }

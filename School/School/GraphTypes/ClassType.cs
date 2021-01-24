@@ -13,20 +13,12 @@ namespace School.GraphTypes
         {
             Field("Id", x => x.Id, type: typeof(IdGraphType));
             Field("Name", x => x.Name);
-            // Field<UserType>("CurrentTeacher",
-            //     resolve: context => {
-            //         if (context.Source.CurrentTeacher != null) {
-            //             return us.GetById(context.Source.CurrentTeacher.ToString());
-            //         } else {
-            //             return null;
-            //         }
-            //     });
             Field("Year", x => x.Year, nullable: true);
             Field<ListGraphType<StudentType>>(
                 "Students",
                 resolve: context => {
                     if (context.Source.Students != null) {
-                        return sc.Get(Builders<Student>.Filter.In("_id", context.Source.Students));
+                        return sc.GetByIds(context.Source.Students);
                     } else {
                         return new List<Student>();
                     }
@@ -36,7 +28,7 @@ namespace School.GraphTypes
             Field<ListGraphType<SubjectType>>(
                 "Subjects",
                 resolve: context => {
-                    return ss.Get(Builders<Subject>.Filter.Eq("Class", ObjectId.Parse(context.Source.Id)));
+                    return ss.GetByClassId(context.Source.Id.ToString());
                 }
             );
         }
