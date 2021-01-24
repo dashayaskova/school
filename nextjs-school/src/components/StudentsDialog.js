@@ -5,6 +5,8 @@ import Table from './Table';
 import Router from 'next/router'
 import {
     Dialog,
+    ListItem,
+    ListItemText
 } from '@material-ui/core';
 import { getStudents, addStudentsToClass } from '@/actions/student';
 
@@ -27,7 +29,6 @@ const StudentsDialog = (props) => {
     const classes = useStyles();
     const { onClose, open, classObj, setClass} = props;
     const [filteredStudents, setFilteredStudents] = useState([]);
-    const [selectedStudents, setSelectedStudents] = useState([]);
     const [surname, setSurname] = useState("");
 
     const handleSurnameChange = (event) => {
@@ -42,16 +43,15 @@ const StudentsDialog = (props) => {
         );
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (el) => {
         addStudentsToClass(
             classObj.id, 
-            selectedStudents.map(e => e.id),
+            [el.id],
             (students) => { 
                 setClass({...classObj, students: students }); 
                 onClose();
                 setSurname("");
                 setFilteredStudents([]);
-                setSelectedStudents([]);
              }
         );
     };
@@ -74,26 +74,13 @@ const StudentsDialog = (props) => {
             </div>
 
             {
-                <Table
-                    options={{
-                        grouping: false,
-                        selection: true,
-                        search: false
-                    }}
-                    title=""
-                    columns={[
-                        { title: "Прізвище", field: 'surname' },
-                        { title: "Ім'я", field: 'name' },
-                        { title: "По батькові", field: 'patronymic' },
-                    ]}
-                    data={filteredStudents}
-                    onSelectionChange={(rows) => setSelectedStudents(rows)}
-                />
+                filteredStudents.map((el) => (
+                    <ListItem onClick={() => handleSubmit(el)} button key={el.id}>
+                        <ListItemText primary={`${el.surname} ${el.name} ${el.patronymic}`} />
+                    </ListItem>
+                ))
             }
-            <Box m={1} />
-            <Button onClick={handleSubmit} autoFocus color="secondary">
-                Зберегти
-            </Button>
+
         </Dialog>
     );
 }
