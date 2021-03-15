@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
     }
 
     try {
-        const response = await fetch('http://localhost:3001/auth/user', {
+        const response = await fetch('http://auth/auth/user', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,6 +16,7 @@ const auth = async (req, res, next) => {
                 'Cookie': req.headers['cookie']
             }
         });
+
         if (response.status !== 200) {
             next();
             return;

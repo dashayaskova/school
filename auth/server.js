@@ -1,8 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-dotenv.config();
+import bodyParser from 'body-parser';;
 
 import api from './src/api';
 

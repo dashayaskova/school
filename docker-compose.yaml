@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  nextjs:
+    build:
+      context: ./nextjs-school
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    env_file:
+      - ./nextjs-school/.env.local
+
+  graphql:
+    build:
+      context: ./School/School
+      dockerfile: Dockerfile
+    expose: 
+      - "80"
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    expose: 
+      - "80"
+    env_file:
+      - ./auth/.env
