@@ -15,7 +15,7 @@ const EditUser = (props) => {
 
     return (
         <Navbar title="Редагувати юзера">
-            <UserForm onFormSubmit={onSubmit} user={props.user} params={props.params} classes={props.classes} />
+            <UserForm onFormSubmit={onSubmit} user={props.currentUser} params={props.params} classes={props.classes} />
         </Navbar>
     );
 };

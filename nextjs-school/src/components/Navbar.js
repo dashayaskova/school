@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useRouter } from 'next/router';
@@ -104,103 +104,100 @@ const MiniDrawer = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const value = useContext(UserContext);
 
   return (
-    <UserContext.Consumer>
-      {value =>
-        <div className={classes.root}>
-          <AppBar
-            position="fixed"
-            className={clsx(classes.appBar, {
-              [classes.appBarShift]: open,
+    <div className={classes.root}>
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => setOpen(true)}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
             })}
           >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={() => setOpen(true)}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open,
-                })}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap>
-                {props.title}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            className={clsx(classes.drawer, {
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            })}
-            classes={{
-              paper: clsx({
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open,
-              }),
-            }}
-          >
-            <div className={classes.toolbar}>
-              <IconButton onClick={() => setOpen(false)}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
-              { value.isAdmin && 
-              <ListItem 
-                selected={router.pathname.startsWith('/users')} 
-                button 
-                onClick={() => { router.push('/users') }}>
-                <ListItemIcon><PersonIcon /></ListItemIcon>
-                <ListItemText primary={'Користувачі'} />
-              </ListItem> 
-              }
-              <ListItem
-                button
-                onClick={() => { router.push('/students') }}
-                selected={router.pathname.startsWith('/students')}
-              >
-                <ListItemIcon><SchoolIcon /></ListItemIcon>
-                <ListItemText primary={'База даних учнів'} />
-              </ListItem>
-              <ListItem 
-                button 
-                onClick={() => { router.push('/classes') }}
-                selected={router.pathname.startsWith('/classes')} 
-              >
-                <ListItemIcon><ClassIcon /></ListItemIcon>
-                <ListItemText primary={'Класи'} />
-              </ListItem>
-              <ListItem 
-                button 
-                onClick={() => { router.push('/subjects') }}
-                selected={router.pathname.startsWith('/subjects')} 
-              >
-                <ListItemIcon><TocIcon /></ListItemIcon>
-                <ListItemText primary={'Оцінки'} />
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={() => {
-                signOut(() => router.push('/'));
-              }}>
-                <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-                <ListItemText primary={'Вийти'} />
-              </ListItem>
-            </List>
-          </Drawer>
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {props.children}
-          </main>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            {props.title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={() => setOpen(false)}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
         </div>
-      }
-    </UserContext.Consumer>
+        <Divider />
+        <List>
+          {value.isAdmin &&
+            <ListItem
+              selected={router.pathname.startsWith('/users')}
+              button
+              onClick={() => { router.push('/users') }}>
+              <ListItemIcon><PersonIcon /></ListItemIcon>
+              <ListItemText primary={'Користувачі'} />
+            </ListItem>
+          }
+          <ListItem
+            button
+            onClick={() => { router.push('/students') }}
+            selected={router.pathname.startsWith('/students')}
+          >
+            <ListItemIcon><SchoolIcon /></ListItemIcon>
+            <ListItemText primary={'База даних учнів'} />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => { router.push('/classes') }}
+            selected={router.pathname.startsWith('/classes')}
+          >
+            <ListItemIcon><ClassIcon /></ListItemIcon>
+            <ListItemText primary={'Класи'} />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => { router.push('/subjects') }}
+            selected={router.pathname.startsWith('/subjects')}
+          >
+            <ListItemIcon><TocIcon /></ListItemIcon>
+            <ListItemText primary={'Оцінки'} />
+          </ListItem>
+          <Divider />
+          <ListItem button onClick={() => {
+            signOut(() => router.push('/'));
+          }}>
+            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+            <ListItemText primary={'Вийти'} />
+          </ListItem>
+        </List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        {props.children}
+      </main>
+    </div>
   );
 }
 
