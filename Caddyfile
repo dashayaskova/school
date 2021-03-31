@@ -1,0 +1,3 @@
+school.dsigma.me {
+  reverse_proxy nextjs:80
+}
