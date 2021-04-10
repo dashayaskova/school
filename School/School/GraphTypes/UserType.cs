@@ -3,7 +3,6 @@ using School.Models;
 using School.Services;
 using System.Collections.Generic;
 using MongoDB.Driver;
-using MongoDB.Bson;
 using System.Linq;
 
 namespace School.GraphTypes
@@ -12,12 +11,12 @@ namespace School.GraphTypes
     {
         public UserType(ClassService cs)
         {
-            Field("Id", x => x.Id, type: typeof(IdGraphType));
+            Field("Id", x => x.Id, type: typeof(NonNullGraphType<IdGraphType>));
             Field("Name", x => x.Name);
             Field("Email", x => x.Email);
             Field("Uid", x => x.Uid);
             Field("IsAdmin", x => x.IsAdmin);
-            Field<ListGraphType<ClassSubjectsType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<ClassSubjectsType>>>>(
                 "ClassAccess",
                 resolve: context =>
                 {
@@ -49,12 +48,14 @@ namespace School.GraphTypes
     {
         public ClassSubjectsType(ClassService cs, SubjectService ss)
         {
-            Field<ClassType>("Class", resolve: context =>
+            Field<NonNullGraphType<ClassType>>("Class", resolve: context =>
                 {
                     return context.Source.Class;
                 });
 
-            Field<ListGraphType<SubjectType>>("SubjectAccess", resolve: context =>
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<SubjectType>>>>(
+                "SubjectAccess", 
+                resolve: context =>
                 {
                     return ss.GetByIds(context.Source.SubjectAccess);
                 });

@@ -1,6 +1,4 @@
 using GraphQL.Types;
-using System.Collections.Generic;
-using MongoDB.Bson;
 
 namespace School.GraphTypes
 {

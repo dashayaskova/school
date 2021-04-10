@@ -175,7 +175,7 @@ const UserForm = (props) => {
             onClick={handleClickOpen}
           >
             Додати класи
-                </Button>
+          </Button>
           <AddClassDialog
             open={open}
             onClose={() => setOpen(false)}

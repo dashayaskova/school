@@ -1,8 +1,6 @@
 using GraphQL.Types;
 using School.Models;
 using School.Services;
-using System.Collections.Generic;
-using MongoDB.Driver;
 
 namespace School.GraphTypes
 {
@@ -10,14 +8,14 @@ namespace School.GraphTypes
     {
         public StudentType(StudentService cs)
         {
-            Field("Id", x => x.Id, type: typeof(IdGraphType));
+            Field("Id", x => x.Id, type: typeof(NonNullGraphType<IdGraphType>));
             Field("Surname", x => x.Surname);
             Field("Name", x => x.Name);
-            Field("Patronymic", x => x.Patronymic);
-            Field("Birthday", x => x.Birthday, type: typeof(DateGraphType));
+            Field("Patronymic", x => x.Patronymic, nullable: true);
+            Field("Birthday", x => x.Birthday, type: typeof(NonNullGraphType<DateGraphType>));
             Field("RegistryId", x => x.RegistryId);
-            Field("Phone", x => x.Phone);
-            Field("Email", x => x.Email);
+            Field("Phone", x => x.Phone, nullable: true);
+            Field("Email", x => x.Email, nullable: true);
         }
     }
 }

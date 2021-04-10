@@ -2,9 +2,7 @@
 const express = require('express');
 const next = require('next');
 const cookieParser = require('cookie-parser')
-
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
 const { auth, privateView, adminView } = require('./middleware.js');
 
 const port = parseInt(process.env.PORT) || 3000;

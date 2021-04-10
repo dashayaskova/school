@@ -45,7 +45,7 @@ const ClassesList = (props) => {
               defaultValue={cntYear}
             >
               {
-                years.map((el) => (<MenuItem value={el}>{el}</MenuItem>))
+                years.map((el) => (<MenuItem key={el} value={el}>{el}</MenuItem>))
               }
             </Select>
           </FormControl>
@@ -57,8 +57,8 @@ const ClassesList = (props) => {
           }}
           title=""
           columns={[
-            { title: "Ім'я", field: 'name' },
-            { title: 'Рік', field: 'year', lookup: years.reduce((acc, curr) => (acc[curr] = curr, acc), {}) },
+            { title: "Ім'я", field: 'name', validate: rowData => Boolean(rowData.name) },
+            { title: 'Рік', field: 'year', lookup: years.reduce((acc, curr) => (acc[curr] = curr, acc), {}), validate: rowData => Boolean(rowData.year) },
             // { title: 'ФІО вчителя', field: 'currentTeacher.id', lookup: teachers.reduce((acc,curr) => (acc[curr.id] = curr.name,acc),{})  }
           ]}
           data={filteredClasses}

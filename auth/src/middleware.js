@@ -1,7 +1,6 @@
 import getFirebaseAdmin from './utils/firebase';
 import { AUTH_COOKIE_NAME } from './utils/constants';
 
-
 export const protectedView = async (req, res, next) => {
     const cookie = req.cookies[AUTH_COOKIE_NAME];
     if (!cookie) {

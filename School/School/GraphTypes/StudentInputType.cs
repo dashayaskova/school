@@ -21,10 +21,10 @@ namespace School.GraphTypes
             Name = "StudentInput";
             Field(x => x.Name);
             Field(x => x.Surname);
-            Field(x => x.Patronymic);
+            Field(x => x.Patronymic, nullable: true);
             Field(x => x.Birthday);
-            Field(x => x.Email);
-            Field(x => x.Phone);
+            Field(x => x.Email, nullable: true);
+            Field(x => x.Phone, nullable: true);
             Field(x => x.RegistryId);
         }
     }

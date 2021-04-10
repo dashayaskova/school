@@ -76,9 +76,14 @@ const StudentsDialog = (props) => {
             {
                 filteredStudents.map((el) => (
                     <ListItem onClick={() => handleSubmit(el)} button key={el.id}>
-                        <ListItemText primary={`${el.surname} ${el.name} ${el.patronymic}`} />
+                        <ListItemText primary={`${el.surname} ${el.name} ${el.patronymic || ''}`} />
                     </ListItem>
                 ))
+            }
+
+            {
+              filteredStudents.length === 0 && 
+              <div>Список порожній</div>
             }
 
         </Dialog>

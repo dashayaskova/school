@@ -79,9 +79,9 @@ export async function createStudent(student, onSuccess, onError) {
         `mutation (
             $name: String!
             $surname: String!
-            $patronymic: String!
-            $email: String!
-            $phone: String!
+            $patronymic: String
+            $email: String
+            $phone: String
             $registryId: String!
             $birthday: Date!
           ) {
@@ -119,9 +119,9 @@ export async function editStudent(student, onSuccess, onError) {
             $id: String!
             $name: String!
             $surname: String!
-            $patronymic: String!
-            $email: String!
-            $phone: String!
+            $patronymic: String
+            $email: String
+            $phone: String
             $registryId: String!
             $birthday: Date!
           ) {

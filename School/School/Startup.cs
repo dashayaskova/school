@@ -1,4 +1,3 @@
-using GraphQL.Server.Ui.Playground;
 using GraphQL.Server.Ui.Voyager;
 using GraphQL.Server.Ui.GraphiQL;
 using Microsoft.AspNetCore.Builder;
@@ -14,91 +13,90 @@ using School.GraphTypes;
 using School.Models;
 using School.Repository;
 
-
 namespace School
 {
-	public class Startup
-	{
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-		public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddSingleton<IDependencyResolver>(
-				s => new FuncDependencyResolver(s.GetRequiredService)
-			);
-			services.Configure<SchoolDatabaseSettings>(
-        		Configuration.GetSection(nameof(SchoolDatabaseSettings)));
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IDependencyResolver>(
+                s => new FuncDependencyResolver(s.GetRequiredService));
 
-    		services.AddSingleton<ISchoolDatabaseSettings>(sp =>
-        		sp.GetRequiredService<IOptions<SchoolDatabaseSettings>>().Value);
+            services.Configure<SchoolDatabaseSettings>(
+                Configuration.GetSection(nameof(SchoolDatabaseSettings)));
 
-			services.AddSingleton<BaseRepository<User>>();
-			services.AddSingleton<BaseRepository<Class>>();
-			services.AddSingleton<BaseRepository<Student>>();
-			services.AddSingleton<BaseRepository<Subject>>();
-			services.AddSingleton<BaseRepository<Grade>>();
-			services.AddSingleton<BaseRepository<GradeSpace>>();
-			services.AddSingleton<BaseRepository<Params>>();
-			services.AddSingleton<ParamsService>();
-			services.AddSingleton<UserService>();
-			services.AddSingleton<ClassService>();
-			services.AddSingleton<StudentService>();
-			services.AddSingleton<GradeSpaceService>();
-			services.AddSingleton<GradeService>();
-			services.AddSingleton<SubjectService>();
-			services.AddSingleton<ParamsService>();
-			services.AddSingleton<UserType>();
-			services.AddSingleton<ClassType>();
-			services.AddSingleton<ClassSubjectsType>();
-			services.AddSingleton<StudentType>();
-			services.AddSingleton<ParamsType>();
-			services.AddSingleton<SubjectType>();
-			services.AddSingleton<GradeSpaceType>();
-			services.AddSingleton<GradeType>();
-			services.AddSingleton<ClassSubjectsInputType>();
-			services.AddSingleton<UserInputType>();
-			services.AddSingleton<ClassInputType>();
-			services.AddSingleton<StudentInputType>();
-			services.AddSingleton<GradeSpaceInputType>();
-			services.AddSingleton<GradeInputType>();
-			services.AddSingleton<SubjectInputType>();
-			services.AddSingleton<Query>();
-			services.AddSingleton<Mutation>();
-			services.AddSingleton<SchoolSchema>();
-			services.AddControllers().AddNewtonsoftJson();
-		}
+            services.AddSingleton<ISchoolDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<SchoolDatabaseSettings>>().Value);
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				app.UseHttpsRedirection();
-			}
+            services.AddSingleton<BaseRepository<User>>();
+            services.AddSingleton<BaseRepository<Class>>();
+            services.AddSingleton<BaseRepository<Student>>();
+            services.AddSingleton<BaseRepository<Subject>>();
+            services.AddSingleton<BaseRepository<Grade>>();
+            services.AddSingleton<BaseRepository<GradeSpace>>();
+            services.AddSingleton<BaseRepository<Params>>();
+            services.AddSingleton<ParamsService>();
+            services.AddSingleton<UserService>();
+            services.AddSingleton<ClassService>();
+            services.AddSingleton<StudentService>();
+            services.AddSingleton<GradeSpaceService>();
+            services.AddSingleton<GradeService>();
+            services.AddSingleton<SubjectService>();
+            services.AddSingleton<ParamsService>();
+            services.AddSingleton<UserType>();
+            services.AddSingleton<ClassType>();
+            services.AddSingleton<ClassSubjectsType>();
+            services.AddSingleton<StudentType>();
+            services.AddSingleton<ParamsType>();
+            services.AddSingleton<SubjectType>();
+            services.AddSingleton<GradeSpaceType>();
+            services.AddSingleton<GradeType>();
+            services.AddSingleton<ClassSubjectsInputType>();
+            services.AddSingleton<UserInputType>();
+            services.AddSingleton<ClassInputType>();
+            services.AddSingleton<StudentInputType>();
+            services.AddSingleton<GradeSpaceInputType>();
+            services.AddSingleton<GradeInputType>();
+            services.AddSingleton<SubjectInputType>();
+            services.AddSingleton<Query>();
+            services.AddSingleton<Mutation>();
+            services.AddSingleton<SchoolSchema>();
+            services.AddControllers().AddNewtonsoftJson();
+        }
 
-			app
-			.UseCors("MyPolicy")
-			.UseWebSockets()
-			.UseGraphQLVoyager(new GraphQLVoyagerOptions() { Path = "/voyager" })
-			.UseGraphiQLServer(new GraphiQLOptions() { Path = "/"});
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
 
-			app.UseRouting();
-			app.UseAuthorization();
+            app
+            .UseCors("MyPolicy")
+            .UseWebSockets()
+            .UseGraphQLVoyager(new GraphQLVoyagerOptions() { Path = "/voyager" })
+            .UseGraphiQLServer(new GraphiQLOptions() { Path = "/" });
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
-			});
-		}
-	}
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+    }
 }

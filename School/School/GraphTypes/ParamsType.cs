@@ -1,8 +1,5 @@
 using GraphQL.Types;
 using School.Models;
-using School.Services;
-using MongoDB.Driver;
-using System.Collections.Generic;
 
 namespace School.GraphTypes
 {
@@ -10,7 +7,7 @@ namespace School.GraphTypes
     {
         public ParamsType()
         {
-            Field("Id", x => x.Id, type: typeof(IdGraphType));
+            Field("Id", x => x.Id, type: typeof(NonNullGraphType<IdGraphType>));
             Field("Years", x => x.Years);
             Field("CurrentYear", x => x.CurrentYear);
         }

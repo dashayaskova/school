@@ -1,8 +1,6 @@
 using GraphQL.Types;
 using School.Models;
 using School.Services;
-using MongoDB.Bson;
-using System.Collections.Generic;
 
 namespace School.GraphTypes
 {
@@ -10,7 +8,7 @@ namespace School.GraphTypes
     {
         public GradeType(StudentService ss, GradeSpaceService gsp)
         {
-            Field("Id", x => x.Id, type: typeof(IdGraphType));
+            Field("Id", x => x.Id, type: typeof(NonNullGraphType<IdGraphType>));
             Field("Mark", x => x.Mark);
             Field<StudentType>("Student",
                 resolve: context =>

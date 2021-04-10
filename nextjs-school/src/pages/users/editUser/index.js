@@ -10,7 +10,12 @@ const useStyles = makeStyles((theme) => ({}));
 const EditUser = (props) => {
     const classes = useStyles();
     const onSubmit = async (user, onSuccess, onError) => {
-        await editUser(user, onSuccess, onError);
+      if(!user.name) {
+        onError();
+        return;
+      }
+
+      await editUser(user, onSuccess, onError);
     }
 
     return (

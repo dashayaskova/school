@@ -19,7 +19,6 @@ router.get('/user', protectedView, async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const admin = await getFirebaseAdmin();
-
     const idToken = req.body.token;
 
     try {

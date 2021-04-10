@@ -29,13 +29,13 @@ const StudentsList = (props) => {
         }}
         title=""
         columns={[
-            { title: "Прізвище", field: 'surname' },
-            { title: "Ім'я", field: 'name' },
+            { title: "Прізвище", field: 'surname', validate: rowData => Boolean(rowData.surname) },
+            { title: "Ім'я", field: 'name', validate: rowData => Boolean(rowData.name) },
             { title: "По батькові", field: 'patronymic' },
-            { title: 'День народження', field: 'birthday', type: 'date' },
+            { title: 'День народження', field: 'birthday', type: 'date', validate: rowData => Boolean(rowData.birthday) },
             { title: 'Телефон', field: 'phone' },
             { title: 'Пошта', field: 'email' },
-            { title: 'Номер особ. справи', field: 'registryId' },
+            { title: 'Номер особ. справи', field: 'registryId', validate: rowData => Boolean(rowData.registryId) },
         ]}
         data={students}
         editable={{

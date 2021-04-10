@@ -11,6 +11,11 @@ const AddUser = (props) => {
     const classes = useStyles();
 
     const onSubmit = async (user, onSuccess, onError) => {
+        if(!user.password || !user.email || !user.name) {
+          onError();
+          return;
+        }
+
         await addUser(user, onSuccess, onError);
     }
 

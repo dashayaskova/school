@@ -12,20 +12,20 @@ namespace School.GraphQL
             ClassService cs,
             StudentService ss,
             SubjectService subS,
-			GradeService gs,
+			      GradeService gs,
             GradeSpaceService gss,
             ParamsService ps)
         {
             Name = "Query";
 
-            Field<ListGraphType<UserType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<UserType>>>>(
             "users",
             resolve: context =>
             {
                 return us.Get();
             });
 
-            Field<ListGraphType<UserType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<UserType>>>>(
             "teachers",
             resolve: context =>
             {
@@ -52,7 +52,7 @@ namespace School.GraphQL
                 return us.GetByUid(context.GetArgument<string>("uid"));
             });
             
-            Field<ListGraphType<ClassType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<ClassType>>>>(
             "classes",
             resolve: context =>
             {
@@ -69,7 +69,7 @@ namespace School.GraphQL
                 return cs.GetById(context.GetArgument<string>("id"));
             });
 
-            Field<ListGraphType<StudentType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<StudentType>>>>(
             "students",
             arguments: new QueryArguments(
                 new QueryArgument<StringGraphType> { Name = "surname" }
@@ -92,7 +92,7 @@ namespace School.GraphQL
                 return ss.GetById(context.GetArgument<string>("id"));
             });
 
-			Field<SubjectType>(
+			      Field<SubjectType>(
             "subject",
             arguments: new QueryArguments(
                 new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
@@ -102,7 +102,7 @@ namespace School.GraphQL
                 return subS.GetById(context.GetArgument<string>("id"));
             });
 
-			Field<ListGraphType<SubjectType>>(
+			      Field<NonNullGraphType<ListGraphType<NonNullGraphType<SubjectType>>>>(
             "subjects",
             arguments: new QueryArguments(
                 new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "classId" }
@@ -112,7 +112,7 @@ namespace School.GraphQL
                 return subS.GetByClassId(context.GetArgument<string>("classId"));
             });
 
-			Field<ListGraphType<GradeType>>(
+			      Field<NonNullGraphType<ListGraphType<NonNullGraphType<GradeType>>>>(
             "grades",
             arguments: new QueryArguments(
                 new QueryArgument<StringGraphType> { Name = "id" }
@@ -122,7 +122,7 @@ namespace School.GraphQL
                 return gs.GetBySubject(context.GetArgument<string>("id"));
             });
 
-            Field<ListGraphType<GradeType>>(
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<GradeType>>>>(
             "studentGrades",
             arguments: new QueryArguments(
                 new QueryArgument<StringGraphType> { Name = "studentId" },

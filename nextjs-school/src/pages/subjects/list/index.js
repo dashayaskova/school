@@ -69,7 +69,7 @@ const SubjectsList = (props) => {
               value={cntYear}
             >
               {
-                props.params.years.map((el) => (<MenuItem value={el}>{el}</MenuItem>))
+                props.params.years.map((el) => (<MenuItem key={el} value={el}>{el}</MenuItem>))
               }
             </Select>
           </FormControl>
@@ -86,7 +86,7 @@ const SubjectsList = (props) => {
             >
                 <MenuItem value="">-</MenuItem>
               {
-                filteredClasses.map((el) => (<MenuItem value={el.id}>{el.name}</MenuItem>))
+                filteredClasses.map((el) => (<MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>))
               }
             </Select>
           </FormControl>
@@ -98,7 +98,7 @@ const SubjectsList = (props) => {
           }}
           title=""
           columns={[
-            { title: "Назва", field: 'name' }
+            { title: "Назва", field: 'name', validate: rowData => Boolean(rowData.name) }
           ]}
           data={subjects}
           actions={[

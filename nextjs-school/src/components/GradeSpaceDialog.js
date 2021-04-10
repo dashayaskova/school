@@ -31,7 +31,8 @@ const GradeSpaceDialog = (props) => {
                                 sem2: 'Семестр 2',
                                 year: 'Рік'
                             }, 
-                            initialAddValue: 'usual'
+                            initialAddValue: 'usual',
+                            validate: rowData => Boolean(rowData.type)
                         },
                         { title: "Назва", field: 'name', require: true, validate: rowData => Boolean(rowData.name) },
                         { title: "Дата", 

@@ -1,7 +1,5 @@
 using GraphQL.Types;
-using MongoDB.Bson;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace School.GraphTypes
 {
