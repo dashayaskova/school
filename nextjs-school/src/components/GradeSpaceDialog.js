@@ -52,6 +52,7 @@ const GradeSpaceDialog = (props) => {
                         onRowAdd: newData =>
                         new Promise((resolve, reject) => {
                             newData.subject = subject.id;
+                            newData.class = subject.class.id;
                             createGradeSpace(newData, (res) => { 
                                 setGradeSpaces([...gradeSpaces, res]);
                             });

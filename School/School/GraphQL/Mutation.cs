@@ -2,6 +2,8 @@ using GraphQL.Types;
 using School.Services;
 using School.GraphTypes;
 using System.Collections.Generic;
+using GraphQL.Authorization;
+using GraphQL;
 
 namespace School.GraphQL
 {
@@ -16,6 +18,7 @@ namespace School.GraphQL
             SubjectService subS)
         {
             Name = "Mutation";
+            this.AuthorizeWith("AdminOrTeacherPolicy");
 
             Field<NonNullGraphType<UserType>>(
                 "createUser",
@@ -25,7 +28,7 @@ namespace School.GraphQL
                 resolve: context =>
                 {   
                     return us.Add(context.GetArgument<UserInput>("data"));
-                });
+                }).AuthorizeWith("AdminPolicy");
 
             Field<NonNullGraphType<UserType>>(
                 "editUser",
@@ -37,7 +40,7 @@ namespace School.GraphQL
                 {
                     return us.Edit(context.GetArgument<string>("id"),
                      context.GetArgument<UserInput>("data"));
-                });
+                }).AuthorizeWith("AdminPolicy");
 
             Field<NonNullGraphType<BooleanGraphType>>(
                 "deleteUser",
@@ -46,7 +49,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                      us.Delete(context.GetArgument<string>("id"))
-                );
+                ).AuthorizeWith("AdminPolicy");
 
             Field<NonNullGraphType<ClassType>>(
                 "createClass",
@@ -56,7 +59,7 @@ namespace School.GraphQL
                 resolve: context =>
                 {
                     return cs.Add(context.GetArgument<ClassInput>("data"));
-                });
+                }).AuthorizeWith("AdminPolicy");
             
             Field<NonNullGraphType<ClassType>>(
                 "editClass",
@@ -68,7 +71,7 @@ namespace School.GraphQL
                 {
                     return cs.Edit(context.GetArgument<string>("id"), 
                         context.GetArgument<ClassInput>("data"));
-                });
+                }).AuthorizeWith("AdminPolicy");;
 
             Field<NonNullGraphType<BooleanGraphType>>(
                 "deleteClass",
@@ -77,7 +80,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                      cs.Delete(context.GetArgument<string>("id"))
-                );
+                ).AuthorizeWith("AdminPolicy");
             
             Field<NonNullGraphType<StudentType>>(
                 "createStudent",
@@ -108,7 +111,7 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                      ss.Delete(context.GetArgument<string>("id"))
-                );
+                ).AuthorizeWith("AdminPolicy");
             
             Field<NonNullGraphType<SubjectType>>(
                 "createSubject",
@@ -117,7 +120,15 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    return subS.Add(context.GetArgument<SubjectInput>("data"));
+                    var data = context.GetArgument<SubjectInput>("data");
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+                    
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId.ToString() == data.Class) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+                    
+                    return subS.Add(data);
                 });
             
             Field<NonNullGraphType<SubjectType>>(
@@ -128,8 +139,21 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    return subS.Edit(context.GetArgument<string>("id"), 
-                        context.GetArgument<SubjectInput>("data"));
+                    var subjectId = context.GetArgument<string>("id");
+                    var subject = subS.GetById(subjectId);
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+
+                    if(!user.IsAdmin) {
+                        var classAccess = user.ClassAccess.Find(e => e.ClassId == subject.Class);
+                      
+                        if(classAccess == null || 
+                          (classAccess.SubjectAccess.Count != 0 &&
+                          classAccess.SubjectAccess.Find(e => e.ToString() == subjectId) == null)
+                        )
+                          throw new ExecutionError("No access to this class");
+                    }
+                    
+                    return subS.Edit(subjectId, context.GetArgument<SubjectInput>("data"));
                 });
             
             Field<NonNullGraphType<BooleanGraphType>>(
@@ -139,7 +163,21 @@ namespace School.GraphQL
                 ),
                 resolve: context => 
                 {
-                    return subS.Delete(context.GetArgument<string>("id"));
+                    var subjectId = context.GetArgument<string>("id");
+                    var subject = subS.GetById(subjectId);
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+
+                    if(!user.IsAdmin) {
+                        var classAccess = user.ClassAccess.Find(e => e.ClassId == subject.Class);
+                      
+                        if(classAccess == null || 
+                          (classAccess.SubjectAccess.Count != 0 &&
+                          classAccess.SubjectAccess.Find(e => e.ToString() == subjectId) == null)
+                        )
+                          throw new ExecutionError("No access to this class");
+                    }
+                    
+                    return subS.Delete(subjectId);
                 });
 
             Field<NonNullGraphType<ListGraphType<NonNullGraphType<GradeType>>>>(
@@ -179,7 +217,15 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    return gss.Add(context.GetArgument<GradeSpaceInput>("data"));
+                    var data = context.GetArgument<GradeSpaceInput>("data");
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId.ToString() == data.Class) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+
+                    return gss.Add(data);
                 });
             
             Field<NonNullGraphType<GradeSpaceType>>(
@@ -189,8 +235,16 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    var gradeSpace = context.GetArgument<GradeSpaceInput>("data");
-                    return gss.Edit(gradeSpace.Id, gradeSpace);
+                    var data = context.GetArgument<GradeSpaceInput>("data");
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+                    var gradeSpace = gss.GetById(data.Id);
+
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId == gradeSpace.Class) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+                    
+                    return gss.Edit(data.Id, data);
                 });
             
             Field<NonNullGraphType<BooleanGraphType>>(
@@ -200,7 +254,16 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
-                    return gss.Delete(context.GetArgument<string>("id"));;
+                    var id = context.GetArgument<string>("id");
+                    var gradeSpace = gss.GetById(id);
+                    var user = (context.UserContext as GraphQLContext).UserDb;
+
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId == gradeSpace.Class) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+
+                    return gss.Delete(id);;
                 });
             
             Field<NonNullGraphType<ClassType>>(
@@ -211,8 +274,16 @@ namespace School.GraphQL
                 ),
                 resolve: context =>
                 {
+                    var classId = context.GetArgument<string>("classId");
+                    var user = (context.UserContext as GraphQLContext).UserDb; 
+
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId.ToString() == classId) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+
                     return cs.AddStudent(
-                        context.GetArgument<string>("classId"), 
+                        classId, 
                         context.GetArgument<List<string>>("students"));
                 });
             
@@ -224,8 +295,16 @@ namespace School.GraphQL
                 ),
                 resolve: context => 
                 {
+                    var classId = context.GetArgument<string>("classId");
+                    var user = (context.UserContext as GraphQLContext).UserDb; 
+
+                    if(!user.IsAdmin && 
+                      user.ClassAccess.Find(e => e.ClassId.ToString() == classId) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+
                     return cs.RemoveStudent(
-                        context.GetArgument<string>("classId"), 
+                        classId, 
                         context.GetArgument<string>("studentId"));
                 });
         }

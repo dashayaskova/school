@@ -2,6 +2,8 @@ using GraphQL.Types;
 using School.Services;
 using School.GraphTypes;
 using System.Linq;
+using GraphQL.Authorization;
+using GraphQL;
 
 namespace School.GraphQL
 {
@@ -17,20 +19,21 @@ namespace School.GraphQL
             ParamsService ps)
         {
             Name = "Query";
+            this.AuthorizeWith("AdminOrTeacherPolicy");
 
             Field<NonNullGraphType<ListGraphType<NonNullGraphType<UserType>>>>(
             "users",
             resolve: context =>
             {
                 return us.Get();
-            });
+            }).AuthorizeWith("AdminPolicy");
 
             Field<NonNullGraphType<ListGraphType<NonNullGraphType<UserType>>>>(
             "teachers",
             resolve: context =>
             {
                 return us.GetTeachers();
-            });
+            }).AuthorizeWith("AdminPolicy");
 
             Field<UserType>(
             "user",
@@ -40,7 +43,7 @@ namespace School.GraphQL
             resolve: context =>
             {
                 return us.GetById(context.GetArgument<string>("id"));
-            });
+            }).AuthorizeWith("AdminPolicy");
 
             Field<UserType>(
             "userByUid",
@@ -52,23 +55,6 @@ namespace School.GraphQL
                 return us.GetByUid(context.GetArgument<string>("uid"));
             });
             
-            Field<NonNullGraphType<ListGraphType<NonNullGraphType<ClassType>>>>(
-            "classes",
-            resolve: context =>
-            {
-                return cs.Get();
-            });
-
-            Field<ClassType>(
-            "class",
-            arguments: new QueryArguments(
-                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
-            ),
-            resolve: context =>
-            {
-                return cs.GetById(context.GetArgument<string>("id"));
-            });
-
             Field<NonNullGraphType<ListGraphType<NonNullGraphType<StudentType>>>>(
             "students",
             arguments: new QueryArguments(
@@ -92,6 +78,33 @@ namespace School.GraphQL
                 return ss.GetById(context.GetArgument<string>("id"));
             });
 
+            Field<NonNullGraphType<ListGraphType<NonNullGraphType<ClassType>>>>(
+            "classes",
+            resolve: context =>
+            {
+                var user = (context.UserContext as GraphQLContext).UserDb;
+                var classes = user.IsAdmin ? cs.Get() : cs.GetByIds(user.ClassAccess.Select(e => e.ClassId));
+                return classes;
+            });
+
+            Field<ClassType>(
+            "class",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
+            ),
+            resolve: context =>
+            {
+                var id = context.GetArgument<string>("id");
+                var user = (context.UserContext as GraphQLContext).UserDb;
+
+                if(!user.IsAdmin && 
+                    user.ClassAccess.Find(e => e.ClassId.ToString() == id) == null) {
+                        throw new ExecutionError("No access to this class");
+                    }
+                    
+                return cs.GetById(id);
+            });
+
 			      Field<SubjectType>(
             "subject",
             arguments: new QueryArguments(
@@ -109,7 +122,19 @@ namespace School.GraphQL
             ),
             resolve: context =>
             {
-                return subS.GetByClassId(context.GetArgument<string>("classId"));
+                var user = (context.UserContext as GraphQLContext).UserDb;
+                var id = context.GetArgument<string>("id");
+                var classObj = user.ClassAccess.Find(e => e.ClassId.ToString() == id);
+
+                if(!user.IsAdmin && 
+                   classObj == null) {
+                        throw new ExecutionError("No access to this class");
+                }
+                
+                var subjects = subS.GetByClassId(context.GetArgument<string>("classId"));
+                var filteredSub = user.IsAdmin || classObj.SubjectAccess.Count == 0 ? subjects : 
+                   subjects.Where(s1 => classObj.SubjectAccess.Find(s2 => s1.Id == s2.ToString()) != null);
+                return filteredSub;
             });
 
 			      Field<NonNullGraphType<ListGraphType<NonNullGraphType<GradeType>>>>(

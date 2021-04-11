@@ -24,9 +24,9 @@ namespace School.Services
                 Builders<GradeSpace>.Filter.Eq("Subject", ObjectId.Parse(subjectId)));
         }
 
-        public IEnumerable<GradeSpace> GetBySubjectIds(IEnumerable<ObjectId> ids)
+        public IEnumerable<GradeSpace> GetByClass(string id)
         {
-            return _baseRepository.Get(Builders<GradeSpace>.Filter.In("Subject", ids));
+            return _baseRepository.Get(Builders<GradeSpace>.Filter.Eq("Class", ObjectId.Parse(id)));
         }
 
         public GradeSpace Add(GradeSpaceInput s)
@@ -36,7 +36,8 @@ namespace School.Services
                 Name = s.Name,
                 Date = s.Date,
                 Type = s.Type,
-                Subject = ObjectId.Parse(s.Subject)
+                Subject = ObjectId.Parse(s.Subject),
+                Class = ObjectId.Parse(s.Class)
             };
             _baseRepository.Add(gradeSpace);
             return gradeSpace;
@@ -65,9 +66,9 @@ namespace School.Services
             _gradeService.DeleteByGradeSpaces(ids.Select(e => ObjectId.Parse(e.Id)));
         }
 
-        public void DeleteBySubjects(IEnumerable<ObjectId> ids)
+        public void DeleteByClass(string id)
         {
-            var gardeSpacesIds = GetBySubjectIds(ids).Select(o => ObjectId.Parse(o.Id));
+            var gardeSpacesIds = GetByClass(id).Select(o => ObjectId.Parse(o.Id));
             _baseRepository.Delete(Builders<GradeSpace>.Filter.In("Id", gardeSpacesIds));
             _gradeService.DeleteByGradeSpaces(gardeSpacesIds);
         }

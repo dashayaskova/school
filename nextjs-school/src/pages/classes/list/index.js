@@ -59,7 +59,6 @@ const ClassesList = (props) => {
           columns={[
             { title: "Ім'я", field: 'name', validate: rowData => Boolean(rowData.name) },
             { title: 'Рік', field: 'year', lookup: years.reduce((acc, curr) => (acc[curr] = curr, acc), {}), validate: rowData => Boolean(rowData.year) },
-            // { title: 'ФІО вчителя', field: 'currentTeacher.id', lookup: teachers.reduce((acc,curr) => (acc[curr.id] = curr.name,acc),{})  }
           ]}
           data={filteredClasses}
           actions={[
@@ -72,29 +71,31 @@ const ClassesList = (props) => {
             }
           ]}
           editable={{
-            ...(props.user.isAdmin && { onRowAdd: newData =>
-              new Promise((resolve, reject) => {
-                addClass({ ...newData },
-                  (resp) => setClasses([...classesObj, resp]));
+            ...(props.user.isAdmin && { 
+              onRowAdd: newData =>
+                new Promise((resolve, reject) => {
+                  addClass({ ...newData },
+                    (resp) => setClasses([...classesObj, resp]));
 
-                resolve();
-              }),
-            }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                const id = oldData.id;
+                  resolve();
+                }),
+              onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) => {
+                  const id = oldData.id;
 
-                editClass({ ...newData },
-                  (resp) => setClasses(classesObj.map((el) => id !== el.id ? el : resp)));
+                  editClass({ ...newData },
+                    (resp) => setClasses(classesObj.map((el) => id !== el.id ? el : resp)));
 
-                resolve();
-              }),
-            onRowDelete: oldData =>
-              new Promise(async (resolve, reject) => {
-                const id = oldData.id;
-                deleteClass(id, (resp) => setClasses(classesObj.filter((el) => id !== el.id)));
-                resolve()
-              }),
+                  resolve();
+                }),
+              onRowDelete: (oldData) => 
+                new Promise(async (resolve, reject) => {
+                  const id = oldData.id;
+                  deleteClass(id, (resp) => setClasses(classesObj.filter((el) => id !== el.id)));
+                  resolve()
+                }),
+              }
+            ),
           }}
         />
       </Navbar>

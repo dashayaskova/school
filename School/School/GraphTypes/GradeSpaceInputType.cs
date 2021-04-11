@@ -9,6 +9,7 @@ namespace School.GraphTypes
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public string Subject { get; set; }
+        public string Class { get; set; }
         public string Type { get; set; }
     }
     
@@ -21,6 +22,7 @@ namespace School.GraphTypes
             Field(x => x.Name);
             Field(x => x.Date);
             Field(x => x.Subject, nullable: true);
+            Field(x => x.Class, nullable: true);
             Field(x => x.Type);
         }
     }

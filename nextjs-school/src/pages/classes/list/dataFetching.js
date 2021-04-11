@@ -7,13 +7,11 @@ export async function getServerSideProps(context) {
         (await getUserClasses(context.req, user.uid)).classAccess.map(e => e.class);
 
     const params = await getServerYears(context.req);
-    const teachers = await getTeachers(context.req);
 
     return {
         props: {
             classes,
-            params,
-            teachers
+            params
         }
     }
 }

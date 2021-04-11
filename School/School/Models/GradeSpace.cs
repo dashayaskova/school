@@ -9,6 +9,7 @@ namespace School.Models
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public ObjectId Subject { get; set; }
+        public ObjectId Class { get; set; }
         public string Type { get; set; }
     }
 }

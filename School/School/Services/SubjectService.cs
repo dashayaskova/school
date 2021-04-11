@@ -96,12 +96,9 @@ namespace School.Services
 
         public bool DeleteByClass(string id)
         {
-            var ids = _baseRepository.Get(
-                Builders<Subject>.Filter.Eq("Class", ObjectId.Parse(id)))
-                .Select(e => ObjectId.Parse(e.Id));
             var res = _baseRepository.Delete(
-                Builders<Subject>.Filter.In("Id", ids));
-            _gradeSpaceService.DeleteBySubjects(ids);
+                Builders<Subject>.Filter.Eq("Class", ObjectId.Parse(id)));
+            _gradeSpaceService.DeleteByClass(id);
             return res.DeletedCount == 1;
         }
     }

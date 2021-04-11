@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using GraphQL.Server.Ui.Voyager;
-using GraphQL.Server.Ui.GraphiQL;
+using GraphQL.Validation;
+using GraphQL.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,20 @@ namespace School
 
             services.AddSingleton<ISchoolDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<SchoolDatabaseSettings>>().Value);
+
+            services.AddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
+            services.AddTransient<IValidationRule, AuthorizationValidationRule>();
+
+            services.AddSingleton(s =>
+            {
+                var authSettings = new AuthorizationSettings();
+
+                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim(ClaimTypes.Role, "Admin"));
+                authSettings.AddPolicy("TeacherPolicy", _ => _.RequireClaim(ClaimTypes.Role, "Teacher"));
+                authSettings.AddPolicy("AdminOrTeacherPolicy", _ => _.RequireClaim(ClaimTypes.Role, new[] { "Teacher", "Admin" }));
+
+                return authSettings;
+            });
 
             services.AddSingleton<BaseRepository<User>>();
             services.AddSingleton<BaseRepository<Class>>();
@@ -88,7 +104,8 @@ namespace School
             .UseCors("MyPolicy")
             .UseWebSockets()
             .UseGraphQLVoyager(new GraphQLVoyagerOptions() { Path = "/voyager" })
-            .UseGraphiQLServer(new GraphiQLOptions() { Path = "/" });
+            .UseGraphiQLServer()
+            .UseGraphQLPlayground("/");
 
             app.UseRouting();
             app.UseAuthorization();

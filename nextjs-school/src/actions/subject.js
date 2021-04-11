@@ -42,8 +42,8 @@ export async function getServerSubjectAndGrades(req, id) {
 
 export async function createGradeSpace(gradeSpace, onSuccess, onError) {
   const response = await clientGraphql(
-    `mutation ($name: String!, $date: Date!, $subject: String!, $type: String!) {
-        createGradeSpace(data: {name: $name, date: $date, subject: $subject, type: $type}) {
+    `mutation ($name: String!, $date: Date!, $subject: String!, $type: String!, $class: String!,) {
+        createGradeSpace(data: {name: $name, date: $date, subject: $subject, type: $type, class: $class}) {
           id
           name
           type
@@ -120,7 +120,7 @@ export async function deleteSubject(id, onSuccess, onError) {
 
 export async function editGradeSpace(gradeSpace, onSuccess, onError) {
   const response = await clientGraphql(
-    `mutation ($name: String!, $date: Date!, $type: String!, , $id: String) {
+    `mutation ($name: String!, $date: Date!, $type: String!, $id: String) {
         editGradeSpace(data: {name: $name, date: $date, type: $type, id: $id}) {
           id
           name
