@@ -103,7 +103,7 @@ namespace School
             app
             .UseCors("MyPolicy")
             .UseWebSockets()
-            .UseGraphQLVoyager(new GraphQLVoyagerOptions() { Path = "/voyager" })
+            .UseGraphQLVoyager(new GraphQLVoyagerOptions() {})
             .UseGraphiQLServer()
             .UseGraphQLPlayground("/");
 
