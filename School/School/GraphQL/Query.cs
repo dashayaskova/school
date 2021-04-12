@@ -144,7 +144,8 @@ namespace School.GraphQL
             ),
             resolve: context =>
             {
-                return gs.GetBySubject(context.GetArgument<string>("id"));
+                var gradeSpaces = gss.GetBySubjectId(context.GetArgument<string>("id"));
+                return gs.GetByGradeSpaces(gradeSpaces);
             });
 
             Field<NonNullGraphType<ListGraphType<NonNullGraphType<GradeType>>>>(

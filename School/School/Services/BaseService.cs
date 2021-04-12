@@ -18,7 +18,6 @@ namespace School.Services
         {
             return _baseRepository.Get();
         }
-
         
         public IEnumerable<T> GetByIds(IEnumerable<ObjectId> list) {
             return _baseRepository.Get(Builders<T>.Filter.In("_id", list));

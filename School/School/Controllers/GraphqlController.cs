@@ -32,7 +32,8 @@ namespace School.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] GraphQLQuery query, [FromServices] IEnumerable<IValidationRule> validationRules)
+        public async Task<IActionResult> PostAsync([FromBody] GraphQLQuery query,
+          [FromServices] IEnumerable<IValidationRule> validationRules)
         {
             var user = Request.Headers["X-Firebase-Uid"].Count != 0 ? 
 				        _us.GetByUid(Request.Headers["X-Firebase-Uid"]) : null;

@@ -10,6 +10,14 @@ namespace School.Services
 {
     public class StudentService : BaseService<Student>
     {
+        private GradeService _gradeService;
+
+        public StudentService(BaseRepository<Student> studentRepository, 
+          GradeService gradeService)
+            : base(studentRepository) {
+                _gradeService = gradeService;
+        }
+
         public StudentService(BaseRepository<Student> studentRepository)
             : base(studentRepository) { }
 
@@ -45,6 +53,13 @@ namespace School.Services
             student.Surname = studentInput.Surname;
             student.RegistryId = studentInput.RegistryId;
             return _baseRepository.Edit(id, student);
+        }
+
+        public override bool Delete(string id)
+        {
+            var res = _baseRepository.Delete(id);
+            _gradeService.DeleteByStudent(id);
+            return res.DeletedCount != 0;
         }
     }
 }

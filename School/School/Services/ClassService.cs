@@ -11,10 +11,16 @@ namespace School.Services
     public class ClassService : BaseService<Class>
     {
         public SubjectService _subjectService;
+        public GradeSpaceService _gradeSpaceService;
+        public GradeService _gradeService;
         public ClassService(BaseRepository<Class> classRepository, 
-            SubjectService subjectService)
+            SubjectService subjectService,
+            GradeSpaceService gradeSpaceService,
+            GradeService gradeService)
             : base(classRepository) {
                 _subjectService = subjectService;
+                _gradeSpaceService = gradeSpaceService;
+                _gradeService = gradeService;
              }
 
         public Class Add(ClassInput classInput)
@@ -41,6 +47,9 @@ namespace School.Services
             var classDb = _baseRepository.GetById(id);
             classDb.Students.Remove(ObjectId.Parse(studentId));
             _baseRepository.Edit(id, classDb);
+            var gradeSpaces = _gradeSpaceService.GetByClass(id);
+            _gradeService.DeleteByGradeSpacesAndStudent(
+              gradeSpaces.Select(e => ObjectId.Parse(e.Id)), studentId);
             return true;
         }
 

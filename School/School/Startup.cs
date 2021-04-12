@@ -26,7 +26,6 @@ namespace School
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDependencyResolver>(
@@ -45,9 +44,12 @@ namespace School
             {
                 var authSettings = new AuthorizationSettings();
 
-                authSettings.AddPolicy("AdminPolicy", _ => _.RequireClaim(ClaimTypes.Role, "Admin"));
-                authSettings.AddPolicy("TeacherPolicy", _ => _.RequireClaim(ClaimTypes.Role, "Teacher"));
-                authSettings.AddPolicy("AdminOrTeacherPolicy", _ => _.RequireClaim(ClaimTypes.Role, new[] { "Teacher", "Admin" }));
+                authSettings.AddPolicy("AdminPolicy", 
+                  _ => _.RequireClaim(ClaimTypes.Role, "Admin"));
+                authSettings.AddPolicy("TeacherPolicy", 
+                  _ => _.RequireClaim(ClaimTypes.Role, "Teacher"));
+                authSettings.AddPolicy("AdminOrTeacherPolicy", 
+                  _ => _.RequireClaim(ClaimTypes.Role, new[] { "Teacher", "Admin" }));
 
                 return authSettings;
             });
@@ -88,7 +90,6 @@ namespace School
             services.AddControllers().AddNewtonsoftJson();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
