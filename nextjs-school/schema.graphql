@@ -1,0 +1,170 @@
+input ClassInput {
+  name: String!
+  year: String!
+}
+
+input ClassSubjectsInput {
+  classId: String!
+  subjectAccess: [String!]!
+}
+
+type ClassSubjectsType {
+  class: ClassType!
+  subjectAccess: [SubjectType!]!
+}
+
+type ClassType {
+  id: ID!
+  name: String!
+  students: [StudentType!]!
+  subjects: [SubjectType!]!
+  year: String!
+}
+
+# The `Date` scalar type represents a year, month and day in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar Date
+
+# The `DateTime` scalar type represents a date and time. `DateTime` expects
+# timestamps to be formatted in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar DateTime
+
+# The `DateTimeOffset` scalar type represents a date, time and offset from UTC.
+# `DateTimeOffset` expects timestamps to be formatted in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar DateTimeOffset
+
+scalar Decimal
+
+input GradeInput {
+  id: String = null
+  mark: Int!
+  student: String = null
+  gradeSpace: String = null
+}
+
+input GradeSpaceInput {
+  id: String = null
+  name: String!
+  date: Date!
+  subject: String = null
+  type: String!
+}
+
+type GradeSpaceType {
+  date: Date!
+  id: ID!
+  name: String!
+  subject: SubjectType!
+  type: String!
+}
+
+type GradeType {
+  gradeSpace: GradeSpaceType
+  id: ID!
+  mark: Int!
+  student: StudentType
+}
+
+# The `Milliseconds` scalar type represents a period of time represented as the total number of milliseconds.
+scalar Milliseconds
+
+type Mutation {
+  addStudentsToClass(classId: String!, students: [String!] = null): ClassType!
+  createClass(data: ClassInput!): ClassType!
+  createGrades(data: [GradeInput] = null): [GradeType!]!
+  createGradeSpace(data: GradeSpaceInput!): GradeSpaceType!
+  createStudent(data: StudentInput!): StudentType!
+  createSubject(data: SubjectInput!): SubjectType!
+  createUser(data: UserInput!): UserType!
+  deleteClass(id: String!): Boolean!
+  deleteGradeSpace(id: String!): Boolean!
+  deleteStudent(id: String!): Boolean!
+  deleteSubject(id: String!): Boolean!
+  deleteUser(id: String!): Boolean!
+  editClass(data: ClassInput!, id: String!): ClassType!
+  editGrades(data: [GradeInput] = null): [GradeType!]!
+  editGradeSpace(data: GradeSpaceInput!): GradeSpaceType!
+  editStudent(data: StudentInput!, id: String!): StudentType!
+  editSubject(data: SubjectInput!, id: String!): SubjectType!
+  editUser(data: UserInput!, id: String!): UserType!
+  removeGrades(data: [String] = null): Boolean!
+  removeStudentFromClass(classId: String!, studentId: String!): Boolean!
+}
+
+type ParamsType {
+  currentYear: String!
+  id: ID!
+  years: [String!]!
+}
+
+type Query {
+  class(id: String!): ClassType
+  classes: [ClassType!]!
+  grades(id: String = null): [GradeType!]!
+  params: ParamsType
+  student(id: String!): StudentType
+  studentGrades(studentId: String = null, classId: String = null): [GradeType!]!
+  students(surname: String = null): [StudentType!]!
+  subject(id: String!): SubjectType
+  subjects(classId: String!): [SubjectType!]!
+  teachers: [UserType!]!
+  user(id: String!): UserType
+  userByUid(uid: String!): UserType
+  users: [UserType!]!
+}
+
+# The `Seconds` scalar type represents a period of time represented as the total number of seconds.
+scalar Seconds
+
+input StudentInput {
+  name: String!
+  surname: String!
+  patronymic: String = null
+  birthday: Date!
+  email: String = null
+  phone: String = null
+  registryId: String!
+}
+
+type StudentType {
+  birthday: Date!
+  email: String
+  id: ID!
+  name: String!
+  patronymic: String
+  phone: String
+  registryId: String!
+  surname: String!
+}
+
+input SubjectInput {
+  name: String!
+  class: String!
+}
+
+type SubjectType {
+  class: ClassType!
+  gradeSpaces: [GradeSpaceType!]!
+  id: ID!
+  name: String!
+}
+
+input UserInput {
+  name: String!
+  isAdmin: Boolean!
+  classAccess: [ClassSubjectsInput] = null
+  email: String!
+  uid: String!
+}
+
+type UserType {
+  classAccess: [ClassSubjectsType!]!
+  email: String!
+  id: ID!
+  isAdmin: Boolean!
+  name: String!
+  uid: String!
+}
+
