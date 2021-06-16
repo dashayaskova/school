@@ -77,7 +77,7 @@ const SubjectClass: FunctionComponent<SubjectClassProps> = (props) => {
 
     const gradesColumns = filteredGradeSpaces
         .sort(function (a, b) {
-            return a.date.getTime() - b.date.getTime();
+            return Date.parse(a.date) - Date.parse(b.date);
         })
         .map(grSpace => ({
             title: grSpace.name,
