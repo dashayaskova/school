@@ -1,11 +1,10 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import App, { AppProps, AppContext } from 'next/app'
 import theme from '../src/theme';
- import { resetServerContext } from "react-beautiful-dnd";
 import Router from 'next/router';
 import './_app.css';
 import NProgress from 'nprogress';
@@ -16,8 +15,6 @@ NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
-
-resetServerContext();
 
 export const UserContext = React.createContext<User | null>(null);
 
