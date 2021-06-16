@@ -14,7 +14,7 @@ School website React/Nextjs + ASP.NET CORE
 <li>GraphQL</li>
 </ul>
 <p>&nbsp;</p>
-<h3>Microservice arhitecture</h3>
+<h3>Application arhitecture</h3>
 <p>User tries to login</p>
 <p><img width="700px" src="/readme/photo_2020-11-09_10-16-47.jpg" alt="Login architecture"></p>
 <br />
@@ -33,37 +33,60 @@ School website React/Nextjs + ASP.NET CORE
 </ul>
 <p>Admin can:</p>
 <ul>
-<li>add user (teacher or another user)</li>
-<li>edit user</li>
-<li>delete user</li>
-<li>add classes to which specific teacher will have access</li>
-<li>lookup through all users</li>
-<li>have access to all classes</li>
+<li>add user (teacher or another admin)</li>
+<li>edit/remove user</li>
+<li>give teachers access to their classes and subjects</li>
+<li>add/edit/remove classes</li>
+<li>get class students</li>
+<li>add/edit/remove students to the common storage</li>
+<li>add student to the certain class</li>
+<li>add/edit/remove subjects to the certain class</li>
+<li>add/edit/remove grades to the certain student</li>
+<li>get auto-generated report card for the certain student</li>
+</ul>
+<p>Teacher can:</p>
+<ul>
+<li>get students of the classes, they have access to</li>
+<li>add/edit students to the common storage</li>
+<li>add/remove students to the classes, they have access to</li>
+<li>add/edit/remove grades to the certain student</li>
+<li>get auto-generated report card for the certain student</li>
 </ul>
 <br />
 <h4>Login page</h4>
-<p><img src="/readme/photo_2020-11-10_14-37-56.jpg" alt="Login page"></p>
+<p><img width="700px" src="/readme/Picture11.png" alt="Login page"></p>
 <p>There is no sign up page, because admin adds users.&nbsp;</p>
 <br />
-<h4>Error message if data is incorrect</h4>
-<p><img src="/readme/photo_2020-11-10_14-38-01.jpg" alt="Login page"></p>
-<br />
 <h4>Page with all users</h4>
-<img src="/readme/photo_2020-11-10_14-38-12.jpg" alt="Users page">
+<img width="700px" src="/readme/Picture10.png" alt="Users page">
 <p>In the table you can search by specific words and sort columns.&nbsp;</p>
 <br />
 <h4>Add user page</h4>
-<img src="/readme/photo_2020-11-10_14-38-16.jpg" alt="Add user page">
-<br />
-<h4>Add access to specific classes for teacher</h4>
-<img src="/readme/photo_2020-11-10_14-38-24.jpg" alt="Add user classes page">
+<img width="700px" src="/readme/Picture9.png" alt="Add user page">
 <br />
 <h4>Edit user page</h4>
-<img src="/readme/photo_2020-11-10_14-38-20.jpg" alt="Edit user page">
-<p>In edit mode no opportunity to change email.</p>
+<img width="700px" src="/readme/Picture8.png" alt="Edit user page">
 <br />
-<h4>Remove user</h4>
-<img src="/readme/photo_2020-11-10_14-38-27.jpg" alt="Remove user">
+<h4>Student storage page</h4>
+<img width="700px" src="/readme/Picture7.png" alt="Student storage page">
+<br />
+<h4>Classes page</h4>
+<img width="700px" src="/readme/Picture6.png" alt="Classes page">
+<br />
+<h4>Class students page</h4>
+<img width="700px" src="/readme/Picture5.png" alt="Class students page">
+<br />
+<h4>Class subjects page</h4>
+<img width="700px" src="/readme/Picture4.png" alt="Class subjects page">
+<br />
+<h4>Subject grades page</h4>
+<img width="700px" src="/readme/Picture3.png" alt="Subject grades page">
+<br />
+<h4>Grade column modal</h4>
+<img width="700px" src="/readme/Picture2.png" alt="Grade column modal">
+<br />
+<h4>Student report card</h4>
+<img width="700px" src="/readme/Picture1.png" alt="Student report card">
 <p>&nbsp;</p>
 <h3>Development</h3>
 <p>Make sure you have installed NodeJS and .NET Core.<br />Install node_modules in <code>nextjs-school</code> and <code>auth</code> directories</p>
