@@ -19,10 +19,10 @@ School website React/Nextjs + ASP.NET CORE
 <p><img width="700px" src="/readme/Picture12.jpg" alt="Login architecture"></p>
 <br />
 <p>Admin opens page with users</p>
-<p><img width="700px" src="/readme/Picture13.jpg" alt="Users page architecture"></p>
+<p><img width="700px" src="/readme/Picture13.png" alt="Users page architecture"></p>
 <br />
 <p>Admin adds user</p>
-<p><img width="700px" src="/readme/Picture14.jpg" alt="Add user architecture"></p>
+<p><img width="700px" src="/readme/Picture14.png" alt="Add user architecture"></p>
 <br />
 <p>&nbsp;</p>
 <h3>MVP:</h3>
