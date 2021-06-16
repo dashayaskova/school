@@ -1,0 +1,8 @@
+build:
+  docker:
+    web: nextjs-school/Dockerfile
+    graphql: School/School/Dockerfile
+    auth: auth/Dockerfile
+
+run:
+  web: npm run start
