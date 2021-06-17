@@ -5,8 +5,8 @@ services:
     build:
       context: ./nextjs-school
       dockerfile: Dockerfile
-    expose:
-      - "80"
+    ports:
+      - "3000:3000"
     env_file:
       - ./nextjs-school/.env.local
 
@@ -25,19 +25,3 @@ services:
       - "80"
     env_file:
       - ./auth/.env
-
-  caddy:
-    image: caddy:2.1.1
-    container_name: caddy
-    restart: always
-    volumes:
-      - caddy-stuff:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - ACME_AGREE=true
-
-volumes:
-  caddy-stuff:
