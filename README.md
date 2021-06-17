@@ -1,8 +1,19 @@
-# school
+<h1>School</h1>
 School website React/Nextjs + ASP.NET CORE
 
 <p>Simple school app with microservice architecture, material design and Firebase authentification.&nbsp;</p>
-<h3><br />Stack:</h3>
+<br />
+<h2>Live demo</h2>
+<p>Link to the website: <a href="https://school.dsigma.me/">school.dsigma.me</a></p>
+
+<p>Credentials to the teacker account:</p>
+
+<pre>
+Email: teacher@example.com
+Password: 000000
+</pre>
+<br />
+<h2>Stack</h2>
 <ul>
 <li>React</li>
 <li>Next.js</li>
@@ -14,7 +25,7 @@ School website React/Nextjs + ASP.NET CORE
 <li>GraphQL</li>
 </ul>
 <p>&nbsp;</p>
-<h3>Application arhitecture</h3>
+<h2>Application arhitecture</h2>
 <p>User tries to login</p>
 <p><img width="700px" src="/readme/Picture12.jpg" alt="Login architecture"></p>
 <br />
@@ -25,7 +36,7 @@ School website React/Nextjs + ASP.NET CORE
 <p><img width="700px" src="/readme/Picture14.png" alt="Add user architecture"></p>
 <br />
 <p>&nbsp;</p>
-<h3>MVP:</h3>
+<h2>MVP</h2>
 <p><br />Two types of users:</p>
 <ul>
 <li>teacher</li>
@@ -53,6 +64,7 @@ School website React/Nextjs + ASP.NET CORE
 <li>get auto-generated report card for the certain student</li>
 </ul>
 <br />
+<h2>Screenshots</h2>
 <h4>Login page</h4>
 <p><img width="700px" src="/readme/Picture11.png" alt="Login page"></p>
 <p>There is no sign up page, because admin adds users.&nbsp;</p>
@@ -88,22 +100,19 @@ School website React/Nextjs + ASP.NET CORE
 <h4>Student report card</h4>
 <img width="700px" src="/readme/Picture1.png" alt="Student report card">
 <p>&nbsp;</p>
-<h3>Development</h3>
-<p>Make sure you have installed NodeJS and .NET Core.<br />Install node_modules in <code>nextjs-school</code> and <code>auth</code> directories</p>
+<h2>Local development</h2>
+<p>Before running containers, in <code>auth</code> and <code>nextjs-school</code> directories you need to enter environment variables into <code>.env</code> files. List with all the neccessary variables you can find in <code>.env.example</code> files.</p>
 <br />
-<code>npm install</code>
-<br />
-<br />
-<p>Run auth server in the <code>auth</code> directory</p>
-<code>npm run start</code>
+<p>Run container with auth server</p>
+<code>docker-compose up --build -d auth</code>
 <br />
 <br />
-<p>Run Next.js server in the <code>nextjs-school</code> directory</p>
-<code>npm run start</code>
+<p>Run container with Next.js server</p>
+<code>docker-compose up --build -d nextjs</code>
 <br />
 <br />
-<p>Run graphql server in the <code>School/School</code> directory</p>
-<code>dotnet run School.csproj</code>
+<p>Run container with graphql server</p>
+<code>docker-compose up --build -d graphql</code>
 <br />
 <br />
 <p>Open <a href="http://localhost:3000">localhost:3000</a></p>
