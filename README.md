@@ -3,16 +3,6 @@ School website React/Nextjs + ASP.NET CORE
 
 <p>Simple school app with microservice architecture, material design and Firebase authentification.&nbsp;</p>
 <br />
-<h2>Live demo</h2>
-<p>Link to the website: <a href="https://school.dsigma.me/">school.dsigma.me</a></p>
-
-<p>Credentials to the teacker account:</p>
-
-<pre>
-Email: teacher@example.com
-Password: 000000
-</pre>
-<br />
 <h2>Stack</h2>
 <ul>
 <li>React</li>
